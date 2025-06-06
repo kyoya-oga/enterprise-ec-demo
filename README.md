@@ -1,24 +1,115 @@
-# エンタープライズ級ECサイト 完全アーキテクチャ設計
+# 🛍️ Enterprise EC Demo
 
-## 📂 プロジェクト全体構成
+**モダンなエンタープライズ級ECサイトのデモンストレーション**
+
+Next.js 14 App Router、TypeScript、Tailwind CSSを使用したモダンなECサイトのフロントエンド実装デモです。
+
+## 🌟 特徴
+
+- **モダンUI/UX**: 洗練されたデザインとスムーズなインタラクション
+- **レスポンシブデザイン**: モバイルファーストのアプローチ
+- **国際化対応**: 多言語対応（日本語・英語）
+- **タイプセーフ**: TypeScriptによる型安全性
+- **パフォーマンス最適化**: Next.js 14の最新機能を活用
+- **アクセシビリティ**: WCAG 2.1準拠
+- **ダークモード対応**: システム設定に応じた自動切り替え
+
+## 🛠️ 技術スタック
+
+- **Frontend**: Next.js 14 (App Router), React 18, TypeScript
+- **Styling**: Tailwind CSS, CSS Variables
+- **UI Components**: カスタムデザインシステム
+- **Build Tools**: Turbopack, ESLint, Prettier
+- **Fonts**: Inter (Google Fonts)
+
+## 🚀 Quick Start
+
+```bash
+# リポジトリのクローン
+git clone https://github.com/username/enterprise-ec-demo.git
+cd enterprise-ec-demo
+
+# 依存関係のインストール
+npm install
+
+# 開発サーバーの起動
+npm run dev
+```
+
+ブラウザで [http://localhost:3000](http://localhost:3000) を開いてデモサイトを確認できます。
+
+## 📱 デモ機能
+
+### 🏪 ショップ機能
+- **製品一覧**: カテゴリ別の製品表示
+- **製品詳細**: 詳細情報と画像ギャラリー
+- **検索機能**: 製品名・カテゴリでの検索
+- **カート機能**: 商品の追加・削除・数量変更
+- **決済フロー**: チェックアウトプロセス
+
+### 👤 ユーザー機能
+- **アカウント管理**: プロフィール編集
+- **注文履歴**: 過去の注文確認
+- **お気に入り**: 製品のブックマーク
+- **住所管理**: 配送先住所の登録
+
+### 🔐 認証機能
+- **ログイン・登録**: メール認証
+- **パスワードリセット**: セキュアな復旧フロー
+- **セッション管理**: 安全なユーザーセッション
+
+### 🛡️ 管理機能
+- **ダッシュボード**: 売上・注文状況の概要
+- **製品管理**: 商品の追加・編集・削除
+- **注文管理**: 注文状況の確認・更新
+- **顧客管理**: ユーザー情報の管理
+
+## 📁 プロジェクト構成
 
 ```
-/
-├── src/                     # ソースコード
-├── packages/                # Monorepo構成（将来のマイクロサービス化準備）
-├── public/                  # 静的ファイル
-├── prisma/                  # Prismaスキーマと移行ファイル
-├── tests/                   # テストファイル
-├── scripts/                 # ユーティリティスクリプト
-├── docs/                    # プロジェクトドキュメント
-├── .github/                 # GitHub Actions設定
-├── docker/                  # Docker設定ファイル
-├── k8s/                     # Kubernetes設定ファイル
-└── infrastructure/          # IaC（Infrastructure as Code）
-
+src/
+├── app/                     # Next.js App Router
+│   ├── [locale]/            # 多言語対応ルーティング
+│   │   ├── (shop)/          # ショップ機能
+│   │   ├── (account)/       # アカウント管理
+│   │   ├── (auth)/          # 認証機能
+│   │   └── (admin)/         # 管理機能
+│   ├── globals.css          # グローバルスタイル
+│   └── layout.tsx           # ルートレイアウト
+├── components/              # 再利用可能コンポーネント
+│   ├── ui/                  # UIコンポーネント
+│   └── layout/              # レイアウトコンポーネント
+├── features/                # 機能別モジュール
+│   ├── auth/                # 認証機能
+│   ├── cart/                # カート機能
+│   ├── checkout/            # 決済機能
+│   └── products/            # 製品機能
+├── lib/                     # ユーティリティライブラリ
+├── styles/                  # スタイルファイル
+└── types/                   # TypeScript型定義
 ```
 
-## 📁 src ディレクトリの詳細構成
+## 🎨 UI コンポーネント
+
+### デザインシステム
+- **Button**: グラデーション、ホバーエフェクト、サイズバリエーション
+- **Card**: モダンなシャドウ、ホバーアニメーション
+- **Input**: フォーカス状態、エラー表示、ヘルパーテキスト
+- **Layout**: レスポンシブヘッダー・フッター
+
+### スタイル特徴
+- **カラーパレット**: Red/Pink グラデーション + Zinc グレースケール
+- **タイポグラフィ**: Inter フォントファミリー
+- **アニメーション**: スムーズなトランジション
+- **ダークモード**: CSS Variables による自動切り替え
+
+## 📄 ライセンス
+
+このプロジェクトはデモンストレーション目的で作成されています。
+
+---
+
+## 🔧 詳細アーキテクチャ設計
 
 ```
 src/
@@ -399,284 +490,45 @@ docs/
     └── CODEOWNERS           # コードオーナー
 ```
 
-Cloudflareは素晴らしい選択肢です！特にデモサイトとしては、コストパフォーマンスと性能のバランスが優れています。以下、デプロイメント戦略を提案します：
+## 🚀 デプロイメント
 
-## 🚀 Cloudflare Pages + Workers を使用したデプロイメント
+このプロジェクトはモダンなホスティングプラットフォームでのデプロイメントを想定した設計となっています。
 
-### 利点
-- **無料枠が充実** - 月間100,000リクエストまで無料
-- **エッジでの実行** - 世界中で低レイテンシー
-- **自動デプロイ** - GitHubとの連携が簡単
-- **D1 (SQLite)** - エッジデータベース
-- **R2** - S3互換のオブジェクトストレージ
+### 推奨プラットフォーム
+- **Vercel**: Next.jsアプリケーションの最適化されたホスティング
+- **Netlify**: 静的サイト生成とサーバーレス機能
+- **Cloudflare Pages**: エッジコンピューティングプラットフォーム
 
-### アーキテクチャ構成
-
-```yaml
-# デモサイト用のCloudflareアーキテクチャ
-Frontend:
-  - Cloudflare Pages (Next.js)
-  
-Backend:
-  - Cloudflare Workers (API)
-  - D1 Database (SQLite)
-  - R2 Storage (画像・ファイル)
-  
-Edge Services:
-  - Workers KV (セッション・キャッシュ)
-  - Durable Objects (リアルタイム機能)
-  - Queues (非同期処理)
-```
-
-## 📦 デプロイメント設定ファイル
-
-### 1. `wrangler.toml` (Cloudflare Workers設定)
-
-```toml
-name = "enterprise-ec-api"
-main = "src/index.ts"
-compatibility_date = "2024-01-01"
-
-[env.production]
-vars = { ENVIRONMENT = "production" }
-
-[[d1_databases]]
-binding = "DB"
-database_name = "enterprise-ec-db"
-database_id = "your-database-id"
-
-[[r2_buckets]]
-binding = "STORAGE"
-bucket_name = "enterprise-ec-storage"
-
-[[kv_namespaces]]
-binding = "CACHE"
-id = "your-kv-namespace-id"
-
-[[queues.producers]]
-binding = "QUEUE"
-queue = "enterprise-ec-queue"
-
-[[queues.consumers]]
-queue = "enterprise-ec-queue"
-max_batch_size = 10
-max_batch_timeout = 30
-```
-
-### 2. デプロイメントスクリプト
-
-```json
-// package.json
-{
-  "scripts": {
-    "deploy:pages": "next build && npx wrangler pages deploy .next",
-    "deploy:worker": "wrangler deploy",
-    "deploy:db": "wrangler d1 migrations apply enterprise-ec-db",
-    "deploy:all": "npm run deploy:db && npm run deploy:worker && npm run deploy:pages"
-  }
-}
-```
-
-## 🏗️ インフラ構成
-
-```typescript
-// infrastructure/cloudflare/setup.ts
-export const cloudflareConfig = {
-  // Cloudflare Pages設定
-  pages: {
-    projectName: "enterprise-ec-demo",
-    productionBranch: "main",
-    previewBranches: ["develop", "feature/*"],
-    buildCommand: "npm run build",
-    buildDirectory: ".next",
-    environmentVariables: {
-      NODE_VERSION: "20",
-      NEXT_PUBLIC_API_URL: "https://api.enterprise-ec-demo.workers.dev"
-    }
-  },
-
-  // Workers設定
-  workers: {
-    routes: [
-      "api.enterprise-ec-demo.com/*",
-      "enterprise-ec-demo.com/api/*"
-    ],
-    kvNamespaces: [
-      { title: "SESSIONS", id: "sessions-kv" },
-      { title: "CACHE", id: "cache-kv" }
-    ]
-  },
-
-  // D1 Database設定
-  d1: {
-    databases: [
-      {
-        name: "enterprise-ec-db",
-        location: "apac" // アジア太平洋地域
-      }
-    ]
-  },
-
-  // R2 Storage設定
-  r2: {
-    buckets: [
-      {
-        name: "enterprise-ec-storage",
-        publicAccess: true,
-        corsRules: [{
-          allowedOrigins: ["https://enterprise-ec-demo.pages.dev"],
-          allowedMethods: ["GET", "PUT", "POST", "DELETE"],
-          maxAgeSeconds: 3600
-        }]
-      }
-    ]
-  }
-};
-```
-
-## 🔄 CI/CDパイプライン
-
-```yaml
-# .github/workflows/deploy-cloudflare.yml
-name: Deploy to Cloudflare
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-          
-      - name: Install dependencies
-        run: npm ci
-        
-      - name: Run tests
-        run: npm test
-        
-      - name: Build application
-        run: npm run build
-        
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: enterprise-ec-demo
-          directory: .next
-          
-      - name: Deploy Workers
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          command: deploy
-```
-
-## 🌍 マルチリージョン対応
-
-```typescript
-// src/lib/edge-config.ts
-export const edgeConfig = {
-  // 地域別の設定
-  regions: {
-    'asia-pacific': {
-      dbReplica: 'enterprise-ec-db-apac',
-      storageRegion: 'apac',
-      currency: 'JPY',
-      languages: ['ja', 'en', 'zh']
-    },
-    'europe': {
-      dbReplica: 'enterprise-ec-db-eu',
-      storageRegion: 'eu',
-      currency: 'EUR',
-      languages: ['en', 'de', 'fr']
-    },
-    'americas': {
-      dbReplica: 'enterprise-ec-db-us',
-      storageRegion: 'us',
-      currency: 'USD',
-      languages: ['en', 'es', 'pt']
-    }
-  }
-};
-```
-
-## 💰 コスト最適化（デモサイト向け）
-
-### 無料枠の活用
-```typescript
-// デモサイト用の制限設定
-export const demoLimits = {
-  // Cloudflare Pages
-  requests: 100_000, // 月間リクエスト数
-  bandwidth: 100, // GB
-  
-  // Workers
-  requests: 100_000, // 日次リクエスト数
-  cpuTime: 10, // ミリ秒/リクエスト
-  
-  // D1
-  rows: 500_000, // 行数
-  storage: 5, // GB
-  
-  // R2
-  storage: 10, // GB
-  operations: 1_000_000, // 月間オペレーション
-  
-  // KV
-  operations: 100_000, // 日次オペレーション
-  storage: 1, // GB
-};
-```
-
-## 🔧 環境変数設定
+### 環境変数設定例
 
 ```bash
-# .env.production
-# Cloudflare
-CLOUDFLARE_ACCOUNT_ID=your-account-id
-CLOUDFLARE_API_TOKEN=your-api-token
-CLOUDFLARE_PAGES_PROJECT=enterprise-ec-demo
-
-# D1 Database
-D1_DATABASE_ID=your-database-id
-
-# R2 Storage
-R2_BUCKET_NAME=enterprise-ec-storage
-R2_PUBLIC_URL=https://storage.enterprise-ec-demo.com
-
-# Workers KV
-KV_SESSIONS_ID=your-sessions-kv-id
-KV_CACHE_ID=your-cache-kv-id
-
-# Public URLs
-NEXT_PUBLIC_SITE_URL=https://enterprise-ec-demo.pages.dev
-NEXT_PUBLIC_API_URL=https://api.enterprise-ec-demo.workers.dev
+# .env.example
+NEXT_PUBLIC_SITE_URL=https://your-domain.com
+NEXT_PUBLIC_API_URL=https://api.your-domain.com
 ```
 
-## 🚦 段階的デプロイメント
+## 🧪 テスト
 
-### Phase 1: 基本機能（1週間）
-- 製品表示
-- カート機能
-- 基本的な決済フロー
+```bash
+# ユニットテスト実行
+npm run test
 
-### Phase 2: 高度な機能（2週間）
-- ユーザー認証
-- 注文管理
-- 管理画面
+# E2Eテスト実行
+npm run test:e2e
 
-### Phase 3: エンタープライズ機能（3週間）
-- AI レコメンデーション
-- リアルタイム在庫
-- 分析ダッシュボード
+# カバレッジ確認
+npm run test:coverage
+```
+
+## 🔧 開発ガイド
+
+### コーディング規約
+- **ESLint**: コード品質の維持
+- **Prettier**: コードフォーマットの統一
+- **TypeScript**: 型安全性の確保
+
+### ブランチ戦略
+- `main`: 本番環境用のブランチ
+- `develop`: 開発環境用のブランチ
+- `feature/*`: 機能開発用のブランチ
 
