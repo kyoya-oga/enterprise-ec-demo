@@ -509,6 +509,8 @@ NEXT_PUBLIC_API_URL=https://api.your-domain.com
 
 ## 🧪 テスト
 
+ユニットテストは [Vitest](https://vitest.dev/) を利用します。
+
 ```bash
 # ユニットテスト実行
 npm run test
