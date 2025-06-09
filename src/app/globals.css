@@ -7,37 +7,18 @@
 :root {
   --primary: 239 68 68;
   --primary-foreground: 255 255 255;
-  --secondary: 244 244 245;
-  --secondary-foreground: 39 39 42;
-  --accent: 244 244 245;
-  --accent-foreground: 39 39 42;
-  --muted: 244 244 245;
-  --muted-foreground: 113 113 122;
-  --border: 228 228 231;
-  --background: 255 255 255;
-  --foreground: 39 39 42;
-  --card: 255 255 255;
-  --card-foreground: 39 39 42;
+  --secondary: 39 39 42;
+  --secondary-foreground: 244 244 245;
+  --accent: 39 39 42;
+  --accent-foreground: 244 244 245;
+  --muted: 39 39 42;
+  --muted-foreground: 161 161 170;
+  --border: 39 39 42;
+  --background: 9 9 11;
+  --foreground: 244 244 245;
+  --card: 9 9 11;
+  --card-foreground: 244 244 245;
   --ring: 239 68 68;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --primary: 239 68 68;
-    --primary-foreground: 255 255 255;
-    --secondary: 39 39 42;
-    --secondary-foreground: 244 244 245;
-    --accent: 39 39 42;
-    --accent-foreground: 244 244 245;
-    --muted: 39 39 42;
-    --muted-foreground: 161 161 170;
-    --border: 39 39 42;
-    --background: 9 9 11;
-    --foreground: 244 244 245;
-    --card: 9 9 11;
-    --card-foreground: 244 244 245;
-    --ring: 239 68 68;
-  }
 }
 
 * {
@@ -63,13 +44,53 @@ body {
 
 .glass-effect {
   backdrop-filter: blur(12px);
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-@media (prefers-color-scheme: dark) {
-  .glass-effect {
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
+.dark-gradient-bg {
+  background: radial-gradient(ellipse at top, rgba(239, 68, 68, 0.1) 0%, transparent 50%),
+              radial-gradient(ellipse at bottom, rgba(244, 63, 94, 0.1) 0%, transparent 50%),
+              linear-gradient(135deg, #0a0a0a 0%, #111111 100%);
+}
+
+.card-dark {
+  background: rgba(24, 24, 27, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(63, 63, 70, 0.5);
+}
+
+.input-dark {
+  background: rgba(24, 24, 27, 0.8);
+  border: 1px solid rgba(63, 63, 70, 0.5);
+  color: rgb(244, 244, 245);
+}
+
+.input-dark:focus {
+  border-color: rgb(239, 68, 68);
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(24, 24, 27, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(63, 63, 70, 0.8);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(113, 113, 122, 0.8);
+}
+
+/* Selection colors for dark theme */
+::selection {
+  background: rgba(239, 68, 68, 0.3);
+  color: rgb(244, 244, 245);
 }

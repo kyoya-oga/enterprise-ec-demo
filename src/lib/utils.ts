@@ -1,3 +1,6 @@
+import { type ClassValue, clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
+
 export function formatPrice(price: number, currency = 'JPY', locale = 'ja-JP'): string {
   return new Intl.NumberFormat(locale, {
     style: 'currency',
@@ -13,8 +16,8 @@ export function formatDate(date: Date, locale = 'ja-JP'): string {
   }).format(date)
 }
 
-export function cn(...classes: (string | undefined)[]): string {
-  return classes.filter(Boolean).join(' ')
+export function cn(...inputs: ClassValue[]): string {
+  return twMerge(clsx(inputs))
 }
 
 export function slugify(text: string): string {

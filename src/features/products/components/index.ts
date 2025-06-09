@@ -1,1 +1,2 @@
-// Product components will be added here
+export { ProductCard } from './ProductCard'
+export { AddToCartButton } from './AddToCartButton'

@@ -1,30 +1,24 @@
-export default function ProductsPage({ params: { locale } }: { params: { locale: string } }) {
-  const products = [
-    { id: 1, name: 'プレミアムヘッドフォン', price: 29800, image: '/api/placeholder/300/300' },
-    { id: 2, name: 'スマートウォッチ', price: 45000, image: '/api/placeholder/300/300' },
-    { id: 3, name: 'ワイヤレスイヤホン', price: 18000, image: '/api/placeholder/300/300' },
-    { id: 4, name: 'ポータブルスピーカー', price: 12000, image: '/api/placeholder/300/300' },
-  ]
+import { mockProducts, categories } from '@/lib/data/products'
+import { ProductsClient } from './ProductsClient'
 
+export default function ProductsPage({ params: { locale } }: { params: { locale: string } }) {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">製品一覧</h1>
+    <div className="min-h-screen bg-zinc-950 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 via-transparent to-pink-500/5"></div>
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-red-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl"></div>
+      </div>
       
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {products.map((product) => (
-          <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-            <div className="aspect-square bg-gray-200 flex items-center justify-center">
-              <span className="text-gray-500">画像</span>
-            </div>
-            <div className="p-4">
-              <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
-              <p className="text-2xl font-bold text-blue-600">¥{product.price.toLocaleString()}</p>
-              <button className="w-full mt-4 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors">
-                カートに追加
-              </button>
-            </div>
-          </div>
-        ))}
+      <div className="container mx-auto px-4 py-8 relative z-10">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-red-400 to-pink-400 bg-clip-text text-transparent">
+            製品一覧
+          </h1>
+          <p className="text-zinc-400">最新のテクノロジー製品をお探しください</p>
+        </div>
+        
+        <ProductsClient products={mockProducts} categories={categories} />
       </div>
     </div>
   )
