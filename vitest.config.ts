@@ -10,6 +10,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
+    setupFiles: ['./tests/setup.ts'],
     coverage: {
       provider: 'istanbul',
       reporter: ['text', 'json', 'html'],
@@ -29,6 +30,7 @@ export default defineConfig({
         // Test files
         '**/*.test.ts',
         '**/*.test.tsx',
+        '**/__tests__/**/*',
         // Node modules
         'node_modules/**/*',
       ],
