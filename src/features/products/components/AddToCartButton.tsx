@@ -18,7 +18,7 @@ export function AddToCartButton({ product, onAddToCart }: AddToCartButtonProps) 
       onClick={handleAddToCart}
       disabled={product.stock === 0}
       className="w-full"
-      variant="primary"
+      variant="default"
     >
       {product.stock > 0 ? 'カートに追加' : '在庫切れ'}
     </Button>
