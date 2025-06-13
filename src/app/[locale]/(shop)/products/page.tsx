@@ -18,7 +18,7 @@ export default function ProductsPage({ params: { locale } }: { params: { locale:
           <p className="text-zinc-400">最新のテクノロジー製品をお探しください</p>
         </div>
         
-        <ProductsClient products={mockProducts} categories={categories} />
+        <ProductsClient products={mockProducts} categories={categories} locale={locale} />
       </div>
     </div>
   )

@@ -11,9 +11,10 @@ import type { Product } from '@/features/products/types'
 interface ProductsClientProps {
   products: Product[]
   categories: string[]
+  locale?: string
 }
 
-export function ProductsClient({ products, categories }: ProductsClientProps) {
+export function ProductsClient({ products, categories, locale }: ProductsClientProps) {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   
   const {
@@ -26,9 +27,6 @@ export function ProductsClient({ products, categories }: ProductsClientProps) {
     handlePageChange
   } = useProductFiltering({ products, itemsPerPage: 8 })
 
-  const handleAddToCart = (product: Product) => {
-    console.log('商品をカートに追加:', product.name)
-  }
 
   return (
     <>
@@ -83,9 +81,9 @@ export function ProductsClient({ products, categories }: ProductsClientProps) {
       </div>
       
       {viewMode === 'grid' ? (
-        <ProductGrid products={paginatedData.products} onAddToCart={handleAddToCart} />
+        <ProductGrid products={paginatedData.products} locale={locale} />
       ) : (
-        <ProductList products={paginatedData.products} onAddToCart={handleAddToCart} />
+        <ProductList products={paginatedData.products} locale={locale} />
       )}
       
       <Pagination
