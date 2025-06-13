@@ -10,6 +10,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
+    exclude: ['tests/e2e/**', 'node_modules/**'],
     setupFiles: ['./tests/setup.ts'],
     coverage: {
       provider: 'istanbul',
