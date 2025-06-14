@@ -1,13 +1,11 @@
 import { ProductsClient } from './ProductsClient';
+import { apiClient } from '@/lib/api';
 
-export default async function ProductsPage({
-  params: { locale },
-}: {
-  params: { locale: string };
-}) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000';
-  const res = await fetch(`${baseUrl}/api/products`);
-  const { products, categories } = await res.json();
+export default async function ProductsPage() {
+  const { products, categories } = await apiClient.get<{
+    products: any[];
+    categories: string[];
+  }>('/api/products');
 
   return (
     <div className="min-h-screen bg-zinc-950 relative overflow-hidden">
