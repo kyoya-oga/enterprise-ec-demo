@@ -3,6 +3,7 @@ import { Breadcrumb } from './Breadcrumb'
 import { ProductImage } from './ProductImage'
 import { ProductInfo } from './ProductInfo'
 import { ProductSpecifications } from './ProductSpecifications'
+import { apiClient } from '@/lib/api'
 import type { Product } from '@/features/products/types'
 
 interface ProductDetailPageProps {
@@ -13,12 +14,12 @@ interface ProductDetailPageProps {
 }
 
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
-  const res = await fetch(`${baseUrl}/api/products/${params.id}`)
-  if (!res.ok) {
+  let product: Product
+  try {
+    product = await apiClient.get<Product>(`/api/products/${params.id}`)
+  } catch (error) {
     notFound()
   }
-  const product = (await res.json()) as Product
 
   return (
     <div className="min-h-screen bg-zinc-950 relative overflow-hidden">
