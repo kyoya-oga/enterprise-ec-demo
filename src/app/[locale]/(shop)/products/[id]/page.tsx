@@ -1,9 +1,10 @@
 import { notFound } from 'next/navigation'
-import { mockProducts } from '@/lib/data/products'
 import { Breadcrumb } from './Breadcrumb'
 import { ProductImage } from './ProductImage'
 import { ProductInfo } from './ProductInfo'
 import { ProductSpecifications } from './ProductSpecifications'
+import { apiClient } from '@/lib/api'
+import type { Product } from '@/features/products/types'
 
 interface ProductDetailPageProps {
   params: {
@@ -12,11 +13,11 @@ interface ProductDetailPageProps {
   }
 }
 
-export default function ProductDetailPage({ params }: ProductDetailPageProps) {
-  const productId = parseInt(params.id)
-  const product = mockProducts.find(p => p.id === productId)
-
-  if (!product) {
+export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
+  let product: Product
+  try {
+    product = await apiClient.get<Product>(`/api/products/${params.id}`)
+  } catch (error) {
     notFound()
   }
 
