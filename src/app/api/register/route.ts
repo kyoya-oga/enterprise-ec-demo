@@ -1,63 +1,81 @@
+// TODO: サーバーコンポーネント認証対応実装予定
+// Phase 1: ユーザー登録強化
+// - メール確認機能追加
+// - 自動ログインオプション
+// Phase 2: データベース移行
+// - JSONファイル → PostgreSQL/MySQL
+// - トランザクション対応
+// - ユーザーテーブル設計
+
 import { NextRequest, NextResponse } from 'next/server'
 import { readFile, writeFile } from 'fs/promises'
 import path from 'path'
-import { createHash, randomUUID } from 'crypto'
-
-interface User {
-  id: string
-  email: string
-  firstName: string
-  lastName: string
-  passwordHash: string
-  role: 'user' | 'admin'
-  createdAt: string
-  updatedAt: string
-}
+import { randomUUID } from 'crypto'
+import bcrypt from 'bcrypt'
+import { validateRegistrationInput } from '@/lib/validation'
+import type { ApiUser } from '@/features/auth/types'
 
 const dataFile = process.env.USERS_FILE ||
   path.join(process.cwd(), 'src/lib/data/users.json')
 
-async function readUsers(): Promise<User[]> {
+async function readUsers(): Promise<readonly ApiUser[]> {
   try {
     const data = await readFile(dataFile, 'utf-8')
-    return JSON.parse(data) as User[]
+    const users = JSON.parse(data) as ApiUser[]
+    return Object.freeze(users.map(user => Object.freeze(user)))
   } catch {
-    return []
+    return Object.freeze([])
   }
 }
 
-async function writeUsers(users: User[]): Promise<void> {
+async function writeUsers(users: readonly ApiUser[]): Promise<void> {
   await writeFile(dataFile, JSON.stringify(users, null, 2))
 }
 
 export async function POST(req: NextRequest) {
-  const { email, password, firstName, lastName } = await req.json()
+  try {
+    const { email, password, firstName, lastName } = await req.json()
 
-  if (!email || !password || !firstName || !lastName) {
-    return NextResponse.json({ message: 'Missing fields' }, { status: 400 })
+    const validation = validateRegistrationInput({ email, password, firstName, lastName })
+    if (!validation.isValid) {
+      return NextResponse.json({ 
+        message: 'Validation failed', 
+        errors: validation.errors 
+      }, { status: 400 })
+    }
+
+    const existingUsers = await readUsers()
+    if (existingUsers.some(user => user.email.toLowerCase() === email.toLowerCase())) {
+      return NextResponse.json({ message: 'User already exists' }, { status: 400 })
+    }
+
+    const passwordHash = await bcrypt.hash(password, 12)
+    const now = new Date().toISOString()
+    const newUser: ApiUser = Object.freeze({
+      id: randomUUID(),
+      email: email.toLowerCase(),
+      firstName,
+      lastName,
+      passwordHash,
+      role: 'user' as const,
+      createdAt: now,
+      updatedAt: now,
+    })
+
+    const updatedUsers = Object.freeze([...existingUsers, newUser])
+    await writeUsers(updatedUsers)
+
+    const { passwordHash: _, ...userResponse } = newUser
+    
+    // TODO: 登録後の自動ログインオプション
+    // const token = await generateJWT(userResponse)
+    // const response = NextResponse.json(userResponse, { status: 201 })
+    // response.cookies.set('auth-token', token, { httpOnly: true, secure: true, sameSite: 'strict' })
+    // return response
+    
+    return NextResponse.json(Object.freeze(userResponse), { status: 201 })
+  } catch (error) {
+    console.error('Registration error:', error)
+    return NextResponse.json({ message: 'Internal server error' }, { status: 500 })
   }
-
-  const users = await readUsers()
-  if (users.some(user => user.email === email)) {
-    return NextResponse.json({ message: 'User already exists' }, { status: 400 })
-  }
-
-  const passwordHash = createHash('sha256').update(password).digest('hex')
-  const now = new Date().toISOString()
-  const newUser: User = {
-    id: randomUUID(),
-    email,
-    firstName,
-    lastName,
-    passwordHash,
-    role: 'user',
-    createdAt: now,
-    updatedAt: now,
-  }
-
-  users.push(newUser)
-  await writeUsers(users)
-
-  const { passwordHash: _, ...userResponse } = newUser
-  return NextResponse.json(userResponse, { status: 201 })
 }

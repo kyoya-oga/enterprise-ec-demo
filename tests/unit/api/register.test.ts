@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { mkdtempSync, rmSync, writeFileSync, readFileSync } from 'fs'
 import path from 'path'
 import os from 'os'
+import bcrypt from 'bcrypt'
 
 function createRequest(data: any) {
   return {
@@ -31,7 +32,7 @@ describe('POST /api/register', () => {
   it('creates a new user', async () => {
     const req = createRequest({
       email: 'test@example.com',
-      password: 'secret',
+      password: 'secret123',
       firstName: 'Test',
       lastName: 'User',
     })
@@ -40,6 +41,8 @@ describe('POST /api/register', () => {
     const users = JSON.parse(readFileSync(dataFile, 'utf-8'))
     expect(users).toHaveLength(1)
     expect(users[0].email).toBe('test@example.com')
+    expect(users[0].passwordHash).toBeDefined()
+    expect(await bcrypt.compare('secret123', users[0].passwordHash)).toBe(true)
   })
 
   it('rejects missing fields', async () => {
@@ -47,13 +50,14 @@ describe('POST /api/register', () => {
     const res = await POST(req)
     expect(res.status).toBe(400)
     const body = await res.json()
-    expect(body.message).toBe('Missing fields')
+    expect(body.message).toBe('Validation failed')
+    expect(body.errors).toContain('Password is required')
   })
 
   it('rejects duplicate user', async () => {
     const req1 = createRequest({
       email: 'dup@example.com',
-      password: 'a',
+      password: 'password123',
       firstName: 'Dup',
       lastName: 'User',
     })
@@ -62,7 +66,7 @@ describe('POST /api/register', () => {
 
     const req2 = createRequest({
       email: 'dup@example.com',
-      password: 'b',
+      password: 'password456',
       firstName: 'Dup2',
       lastName: 'User2',
     })
@@ -70,5 +74,33 @@ describe('POST /api/register', () => {
     expect(res2.status).toBe(400)
     const body = await res2.json()
     expect(body.message).toBe('User already exists')
+  })
+
+  it('rejects invalid email format', async () => {
+    const req = createRequest({
+      email: 'invalid-email',
+      password: 'password123',
+      firstName: 'Test',
+      lastName: 'User',
+    })
+    const res = await POST(req)
+    expect(res.status).toBe(400)
+    const body = await res.json()
+    expect(body.message).toBe('Validation failed')
+    expect(body.errors).toContain('Invalid email format')
+  })
+
+  it('rejects short password', async () => {
+    const req = createRequest({
+      email: 'test@example.com',
+      password: 'short',
+      firstName: 'Test',
+      lastName: 'User',
+    })
+    const res = await POST(req)
+    expect(res.status).toBe(400)
+    const body = await res.json()
+    expect(body.message).toBe('Validation failed')
+    expect(body.errors).toContain('Password must be at least 8 characters long')
   })
 })
