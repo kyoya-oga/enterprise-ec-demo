@@ -1,10 +1,10 @@
+'use client'
+
 import Link from 'next/link'
+import { useParams } from 'next/navigation'
 
-interface FooterProps {
-  locale: string
-}
-
-export default function Footer({ locale }: FooterProps) {
+export default function Footer() {
+  const { locale } = useParams() as { locale: string }
   const currentYear = new Date().getFullYear()
 
   return (

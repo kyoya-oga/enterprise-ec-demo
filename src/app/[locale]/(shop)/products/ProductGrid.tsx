@@ -3,10 +3,9 @@ import type { Product } from '@/features/products/types'
 
 interface ProductGridProps {
   products: Product[]
-  locale?: string
 }
 
-export function ProductGrid({ products, locale }: ProductGridProps) {
+export function ProductGrid({ products }: ProductGridProps) {
   if (products.length === 0) {
     return (
       <div className="text-center py-12">
@@ -29,7 +28,6 @@ export function ProductGrid({ products, locale }: ProductGridProps) {
         <ProductCard
           key={product.id}
           product={product}
-          locale={locale}
         />
       ))}
     </div>

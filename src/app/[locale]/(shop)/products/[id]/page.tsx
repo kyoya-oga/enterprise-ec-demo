@@ -29,7 +29,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
       </div>
 
       <div className="container mx-auto px-4 py-8 relative z-10">
-        <Breadcrumb locale={params.locale} productName={product.name} />
+        <Breadcrumb productName={product.name} />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <ProductImage product={product} />

@@ -1,11 +1,11 @@
+'use client'
+
 import Link from 'next/link'
+import { useParams } from 'next/navigation'
 import { MobileMenu } from './MobileMenu'
 
-interface HeaderProps {
-  locale: string
-}
-
-export default function Header({ locale }: HeaderProps) {
+export default function Header() {
+  const { locale } = useParams() as { locale: string }
   return (
     <header className="bg-zinc-950/95 backdrop-blur-md shadow-lg border-b border-zinc-800 sticky top-0 z-50">
       <div className="container mx-auto px-4">
@@ -42,7 +42,7 @@ export default function Header({ locale }: HeaderProps) {
             </Link>
           </div>
 
-          <MobileMenu locale={locale} />
+          <MobileMenu />
         </div>
       </div>
     </header>

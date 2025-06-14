@@ -1,14 +1,17 @@
+'use client'
+
 import type { Product } from '@/features/products/types';
 import { Card, CardContent } from '@/components/ui';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 
 interface ProductCardProps {
   product: Product;
-  locale?: string;
 }
 
-export function ProductCard({ product, locale = 'ja' }: ProductCardProps) {
+export function ProductCard({ product }: ProductCardProps) {
+  const { locale } = useParams() as { locale: string }
   return (
     <Card className="bg-zinc-900/80 backdrop-blur-sm border-zinc-800 hover:shadow-xl hover:border-zinc-700 transition-all duration-300 group overflow-hidden">
       <Link href={`/${locale}/products/${product.id}`} className="block">

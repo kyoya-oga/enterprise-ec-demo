@@ -1,13 +1,16 @@
+'use client'
+
 import { ProductCard } from '@/features/products/components'
 import type { Product } from '@/features/products/types'
 import Link from 'next/link'
+import { useParams } from 'next/navigation'
 
 interface ProductListProps {
   products: Product[]
-  locale?: string
 }
 
-export function ProductList({ products, locale }: ProductListProps) {
+export function ProductList({ products }: ProductListProps) {
+  const { locale } = useParams() as { locale: string }
   if (products.length === 0) {
     return (
       <div className="text-center py-12">
@@ -36,7 +39,7 @@ export function ProductList({ products, locale }: ProductListProps) {
             />
           </div>
           <div className="flex-1 min-w-0">
-            <Link href={`/${locale || 'ja'}/products/${product.id}`}>
+            <Link href={`/${locale}/products/${product.id}`}>
               <h3 className="text-lg font-semibold text-white truncate hover:text-red-400 transition-colors cursor-pointer">{product.name}</h3>
             </Link>
             <p className="text-zinc-400 text-sm mt-1 line-clamp-2">{product.description}</p>
@@ -44,7 +47,7 @@ export function ProductList({ products, locale }: ProductListProps) {
               <div className="flex items-center space-x-2">
                 <span className="text-xl font-bold text-white">¥{product.price.toLocaleString()}</span>
               </div>
-              <Link href={`/${locale || 'ja'}/products/${product.id}`}>
+              <Link href={`/${locale}/products/${product.id}`}>
                 <button className="px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg hover:from-red-600 hover:to-pink-600 transition-all duration-200 text-sm font-medium">
                   詳細を見る
                 </button>

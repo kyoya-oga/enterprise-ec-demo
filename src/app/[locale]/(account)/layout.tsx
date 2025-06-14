@@ -1,16 +1,18 @@
+'use client'
+
+import { useParams } from 'next/navigation'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 
 export default function AccountLayout({
-  children,
-  params: { locale }
+  children
 }: {
   children: React.ReactNode
-  params: { locale: string }
 }) {
+  const { locale } = useParams() as { locale: string }
   return (
     <div className="min-h-screen flex flex-col">
-      <Header locale={locale} />
+      <Header />
       <main className="flex-1 bg-gray-50">
         <div className="container mx-auto px-4 py-8">
           <div className="grid lg:grid-cols-4 gap-8">
@@ -31,7 +33,7 @@ export default function AccountLayout({
           </div>
         </div>
       </main>
-      <Footer locale={locale} />
+      <Footer />
     </div>
   )
 }

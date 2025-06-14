@@ -2,13 +2,11 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
+import { useParams } from 'next/navigation'
 
-interface MobileMenuProps {
-  locale: string
-}
-
-export function MobileMenu({ locale }: MobileMenuProps) {
+export function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false)
+  const { locale } = useParams() as { locale: string }
 
   return (
     <>

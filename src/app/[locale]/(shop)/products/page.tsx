@@ -1,7 +1,7 @@
 import { mockProducts, categories } from '@/lib/data/products'
 import { ProductsClient } from './ProductsClient'
 
-export default function ProductsPage({ params: { locale } }: { params: { locale: string } }) {
+export default function ProductsPage() {
   return (
     <div className="min-h-screen bg-zinc-950 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 via-transparent to-pink-500/5"></div>
@@ -18,7 +18,7 @@ export default function ProductsPage({ params: { locale } }: { params: { locale:
           <p className="text-zinc-400">最新のテクノロジー製品をお探しください</p>
         </div>
         
-        <ProductsClient products={mockProducts} categories={categories} locale={locale} />
+        <ProductsClient products={mockProducts} categories={categories} />
       </div>
     </div>
   )

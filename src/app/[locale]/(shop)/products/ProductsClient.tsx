@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useParams } from 'next/navigation'
 import { ProductFilters } from './ProductFilters'
 import { ProductGrid } from './ProductGrid'
 import { ProductList } from './ProductList'
@@ -11,11 +12,11 @@ import type { Product } from '@/features/products/types'
 interface ProductsClientProps {
   products: Product[]
   categories: string[]
-  locale?: string
 }
 
-export function ProductsClient({ products, categories, locale }: ProductsClientProps) {
+export function ProductsClient({ products, categories }: ProductsClientProps) {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const { locale } = useParams() as { locale: string }
   
   const {
     selectedCategory,
@@ -81,9 +82,9 @@ export function ProductsClient({ products, categories, locale }: ProductsClientP
       </div>
       
       {viewMode === 'grid' ? (
-        <ProductGrid products={paginatedData.products} locale={locale} />
+        <ProductGrid products={paginatedData.products} />
       ) : (
-        <ProductList products={paginatedData.products} locale={locale} />
+        <ProductList products={paginatedData.products} />
       )}
       
       <Pagination
