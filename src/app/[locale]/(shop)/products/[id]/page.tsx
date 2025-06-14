@@ -1,9 +1,9 @@
 import { notFound } from 'next/navigation'
-import { mockProducts } from '@/lib/data/products'
 import { Breadcrumb } from './Breadcrumb'
 import { ProductImage } from './ProductImage'
 import { ProductInfo } from './ProductInfo'
 import { ProductSpecifications } from './ProductSpecifications'
+import type { Product } from '@/features/products/types'
 
 interface ProductDetailPageProps {
   params: {
@@ -12,13 +12,13 @@ interface ProductDetailPageProps {
   }
 }
 
-export default function ProductDetailPage({ params }: ProductDetailPageProps) {
-  const productId = parseInt(params.id)
-  const product = mockProducts.find(p => p.id === productId)
-
-  if (!product) {
+export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
+  const res = await fetch(`${baseUrl}/api/products/${params.id}`)
+  if (!res.ok) {
     notFound()
   }
+  const product = (await res.json()) as Product
 
   return (
     <div className="min-h-screen bg-zinc-950 relative overflow-hidden">
