@@ -1,118 +1,138 @@
+'use client'
+
 import Link from 'next/link'
+import { useState } from 'react'
+
+import { Button } from '@/components/ui/Button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
+import { Input } from '@/components/ui/Input'
+import { Label } from '@/components/ui/Label'
+import { Checkbox } from '@/components/ui/Checkbox'
 
 export default function RegisterPage({ params: { locale } }: { params: { locale: string } }) {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    terms: false
+  })
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }))
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    // Handle form submission
+    console.log('Form submitted:', formData)
+  }
+
   return (
-    <div className="bg-zinc-800/50 backdrop-blur-sm p-8 rounded-lg border border-zinc-700/50 shadow-2xl">
-      <div>
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-zinc-100">
-            新しいアカウントを作成
-          </h2>
-          <p className="mt-2 text-center text-sm text-zinc-400">
-            または{' '}
-            <Link href={`/${locale}/login`} className="font-medium text-red-400 hover:text-red-300">
-              既存のアカウントでログイン
-            </Link>
-          </p>
-        </div>
-        <form className="mt-8 space-y-6">
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="firstName" className="block text-sm font-medium text-zinc-300">
-                  姓
-                </label>
-                <input
-                  id="firstName"
-                  name="firstName"
-                  type="text"
-                  required
-                  className="mt-1 appearance-none relative block w-full px-3 py-2 border border-zinc-600 bg-zinc-800 placeholder-zinc-500 text-zinc-100 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
-                  placeholder="田中"
-                />
-              </div>
-              <div>
-                <label htmlFor="lastName" className="block text-sm font-medium text-zinc-300">
-                  名
-                </label>
-                <input
-                  id="lastName"
-                  name="lastName"
-                  type="text"
-                  required
-                  className="mt-1 appearance-none relative block w-full px-3 py-2 border border-zinc-600 bg-zinc-800 placeholder-zinc-500 text-zinc-100 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
-                  placeholder="太郎"
-                />
-              </div>
-            </div>
-            
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-zinc-300">
-                メールアドレス
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
+    <Card className="w-full max-w-md mx-auto bg-black border-zinc-800">
+      <CardHeader className="space-y-1">
+        <CardTitle className="text-2xl text-center text-zinc-100">
+          新しいアカウントを作成
+        </CardTitle>
+        <CardDescription className="text-center text-zinc-400">
+          または{' '}
+          <Link href={`/${locale}/login`} className="text-red-400 hover:text-red-300 hover:underline">
+            既存のアカウントでログイン
+          </Link>
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="firstName" className="text-zinc-300">姓</Label>
+              <Input
+                id="firstName"
+                name="firstName"
+                placeholder="田中"
+                value={formData.firstName}
+                onChange={handleInputChange}
                 required
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-zinc-600 bg-zinc-800 placeholder-zinc-500 text-zinc-100 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
-                placeholder="your-email@example.com"
               />
             </div>
-            
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-zinc-300">
-                パスワード
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
+            <div className="space-y-2">
+              <Label htmlFor="lastName" className="text-zinc-300">名</Label>
+              <Input
+                id="lastName"
+                name="lastName"
+                placeholder="太郎"
+                value={formData.lastName}
+                onChange={handleInputChange}
                 required
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-zinc-600 bg-zinc-800 placeholder-zinc-500 text-zinc-100 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
-                placeholder="パスワード"
-              />
-            </div>
-            
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-zinc-300">
-                パスワード（確認）
-              </label>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                required
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-zinc-600 bg-zinc-800 placeholder-zinc-500 text-zinc-100 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
-                placeholder="パスワード（確認）"
               />
             </div>
           </div>
 
-          <div className="flex items-center">
-            <input
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-zinc-300">メールアドレス</Label>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="your-email@example.com"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="password" className="text-zinc-300">パスワード</Label>
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="パスワード"
+              value={formData.password}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="confirmPassword" className="text-zinc-300">パスワード（確認）</Label>
+            <Input
+              id="confirmPassword"
+              name="confirmPassword"
+              type="password"
+              placeholder="パスワード（確認）"
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <Checkbox
               id="terms"
               name="terms"
-              type="checkbox"
+              checked={formData.terms}
+              onCheckedChange={(checked) => 
+                setFormData(prev => ({ ...prev, terms: checked === true }))
+              }
               required
-              className="h-4 w-4 text-red-600 focus:ring-red-500 border-zinc-600 bg-zinc-800 rounded"
             />
-            <label htmlFor="terms" className="ml-2 block text-sm text-zinc-300">
-              <a href="#" className="text-red-400 hover:text-red-300">利用規約</a>と
-              <a href="#" className="text-red-400 hover:text-red-300">プライバシーポリシー</a>に同意します
-            </label>
+            <Label htmlFor="terms" className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-zinc-300">
+              <a href="#" className="text-red-400 hover:text-red-300 hover:underline">利用規約</a>と
+              <a href="#" className="text-red-400 hover:text-red-300 hover:underline">プライバシーポリシー</a>に同意します
+            </Label>
           </div>
 
-          <div>
-            <button
-              type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 focus:ring-offset-zinc-900"
-            >
-              アカウントを作成
-            </button>
-          </div>
+          <Button type="submit" className="w-full">
+            アカウントを作成
+          </Button>
         </form>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   )
 }
