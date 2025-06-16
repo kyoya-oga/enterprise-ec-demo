@@ -14,12 +14,17 @@ interface ProductDetailPageProps {
 }
 
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
-  let product: Product
-  try {
-    product = await apiClient.get<Product>(`/api/products/${params.id}`)
-  } catch (error) {
-    notFound()
+  const getProduct = async (): Promise<Product> => {
+    try {
+      return await apiClient.get<Product>(`/api/products/${params.id}`)
+    } catch (error) {
+      notFound()
+      // This line won't be reached due to notFound(), but TypeScript requires a return
+      throw error
+    }
   }
+
+  const product = await getProduct()
 
   return (
     <div className="min-h-screen bg-zinc-950 relative overflow-hidden">

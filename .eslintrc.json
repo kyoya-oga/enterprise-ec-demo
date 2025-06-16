@@ -1,3 +1,101 @@
 {
-  "extends": ["next/core-web-vitals"]
+  "extends": ["next/core-web-vitals"],
+  "rules": {
+    "prefer-const": "error",
+    "no-var": "error"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.ts", "**/*.tsx"],
+      "excludedFiles": ["**/*.test.ts", "**/*.test.tsx"],
+      "rules": {
+        "no-restricted-syntax": [
+          "error",
+          // Phase 1: Prohibit let (Current)
+          {
+            "selector": "VariableDeclaration[kind='let']",
+            "message": "Use 'const' instead of 'let'. Prefer immutable variables. If you need reassignment, consider refactoring to avoid mutation."
+          },
+          
+          // Phase 2: Array mutation methods (Future - currently warn)
+          {
+            "selector": "CallExpression[callee.property.name='push']",
+            "message": "⚠️  Future: Use spread operator [...array, newItem] instead of push() for immutability."
+          },
+          {
+            "selector": "CallExpression[callee.property.name='pop']",
+            "message": "⚠️  Future: Use array.slice(0, -1) instead of pop() for immutability."
+          },
+          {
+            "selector": "CallExpression[callee.property.name='shift']",
+            "message": "⚠️  Future: Use array.slice(1) instead of shift() for immutability."
+          },
+          {
+            "selector": "CallExpression[callee.property.name='unshift']",
+            "message": "⚠️  Future: Use [newItem, ...array] instead of unshift() for immutability."
+          },
+          {
+            "selector": "CallExpression[callee.property.name='splice']",
+            "message": "⚠️  Future: Use array.slice() and spread operators instead of splice() for immutability."
+          },
+          {
+            "selector": "CallExpression[callee.property.name='sort'][arguments.length=0]",
+            "message": "⚠️  Future: Use [...array].sort() or array.toSorted() instead of mutating sort()."
+          },
+          {
+            "selector": "CallExpression[callee.property.name='reverse']",
+            "message": "⚠️  Future: Use [...array].reverse() or array.toReversed() instead of mutating reverse()."
+          },
+          
+          // Phase 3: Object mutation (Future - currently disabled)
+          // Uncomment when ready for Phase 3
+          // {
+          //   "selector": "AssignmentExpression[left.type='MemberExpression']",
+          //   "message": "🔒 Phase 3: Use object spread {...obj, prop: value} instead of direct property assignment for immutability."
+          // },
+          
+          // Phase 4: Delete operator (Future - currently disabled)
+          // {
+          //   "selector": "UnaryExpression[operator='delete']",
+          //   "message": "🔒 Phase 4: Use object destructuring with rest operator instead of delete for immutability."
+          // }
+        ]
+      }
+    },
+    {
+      "files": ["**/*.test.ts", "**/*.test.tsx"],
+      "rules": {
+        "no-restricted-syntax": [
+          "warn",
+          {
+            "selector": "VariableDeclaration[kind='let']",
+            "message": "Consider using 'const' instead of 'let' for better immutability in tests."
+          }
+          // Test files can be more lenient during migration
+        ]
+      }
+    },
+    
+    // Future configuration for complete immutability (commented out)
+    // Uncomment sections progressively as you migrate
+    {
+      "files": ["**/*.ts", "**/*.tsx"],
+      "excludedFiles": ["**/*.test.ts", "**/*.test.tsx"],
+      "rules": {
+        // Phase 2: Enable these when ready to enforce array immutability
+        // "immutable/no-mutation": ["warn", {
+        //   "commonjs": true,
+        //   "exceptions": ["Object.freeze", "Object.seal"]
+        // }],
+        
+        // Phase 3: Strict immutability rules (requires @typescript-eslint)
+        // "@typescript-eslint/prefer-readonly": "warn",
+        // "@typescript-eslint/prefer-readonly-parameter-types": "off", // Too strict for gradual adoption
+        
+        // Phase 4: Functional programming enforcement
+        // "prefer-object-spread": "error",
+        // "no-param-reassign": ["error", { "props": true }]
+      }
+    }
+  ]
 }

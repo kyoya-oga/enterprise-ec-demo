@@ -1,0 +1,66 @@
+{
+  "// Phase 1 - Current": "Basic let prohibition (ACTIVE)",
+  "// Phase 2 - Array Mutations": "Ready to activate - uncomment to enable",
+  "// Phase 3 - Object Mutations": "Future implementation",
+  "// Phase 4 - Full Immutability": "Complete functional programming approach",
+
+  "phases": {
+    "phase1": {
+      "description": "✅ ACTIVE: Prohibit let declarations",
+      "rules": [
+        "VariableDeclaration[kind='let'] -> error"
+      ],
+      "status": "active"
+    },
+    
+    "phase2": {
+      "description": "🟡 READY: Array mutation methods",
+      "rules": [
+        "push() -> error: Use [...array, item]",
+        "pop() -> error: Use array.slice(0, -1)",
+        "shift() -> error: Use array.slice(1)",
+        "unshift() -> error: Use [item, ...array]",
+        "splice() -> error: Use array.slice() + spread",
+        "sort() -> error: Use [...array].sort()",
+        "reverse() -> error: Use [...array].reverse()"
+      ],
+      "activation": "Change 'error' to enforce these rules",
+      "status": "staged"
+    },
+    
+    "phase3": {
+      "description": "🔴 FUTURE: Object mutations",
+      "rules": [
+        "obj.prop = value -> error: Use {...obj, prop: value}",
+        "Object.assign() -> warn: Use object spread",
+        "delete obj.prop -> error: Use destructuring"
+      ],
+      "requirements": ["Phase 2 complete"],
+      "status": "planned"
+    },
+    
+    "phase4": {
+      "description": "🚀 ULTIMATE: Full functional programming",
+      "rules": [
+        "Parameter mutations -> error",
+        "Readonly interfaces enforcement",
+        "Pure function requirements"
+      ],
+      "requirements": ["All previous phases complete"],
+      "status": "future"
+    }
+  },
+
+  "activationInstructions": {
+    "phase2": [
+      "1. Change array mutation rule severity from 'error' to 'error'",
+      "2. Fix all existing array mutations in codebase",
+      "3. Run tests to ensure no regressions"
+    ],
+    "phase3": [
+      "1. Uncomment object mutation rules",
+      "2. Migrate object assignments to spread syntax",
+      "3. Update interfaces to use readonly properties"
+    ]
+  }
+}

@@ -504,12 +504,12 @@ describe('POST /api/register', () => {
       const savedUsers = JSON.parse(readFileSync(dataFile, 'utf-8'))
       expect(savedUsers).toHaveLength(3)
       
-      for (let i = 0; i < users.length; i++) {
-        expect(savedUsers[i].email).toBe(users[i].email)
-        expect(savedUsers[i].firstName).toBe(users[i].firstName)
-        expect(savedUsers[i].lastName).toBe(users[i].lastName)
-        expect(await bcrypt.compare(users[i].password, savedUsers[i].passwordHash)).toBe(true)
-      }
+      await Promise.all(users.map(async (userData, index) => {
+        expect(savedUsers[index].email).toBe(userData.email)
+        expect(savedUsers[index].firstName).toBe(userData.firstName)
+        expect(savedUsers[index].lastName).toBe(userData.lastName)
+        expect(await bcrypt.compare(userData.password, savedUsers[index].passwordHash)).toBe(true)
+      }))
     })
   })
 })
