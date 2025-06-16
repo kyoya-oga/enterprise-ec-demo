@@ -1,35 +1,32 @@
+import { z } from 'zod'
+
 // TODO: サーバーコンポーネント認証実装時の拡張予定
 // - メール重複チェック機能追加
 // - ドメインブラックリスト対応
 // - 国際化対応エラーメッセージ
-export function isValidEmail(email: string): boolean {
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-  return emailRegex.test(email)
-}
 
 // TODO: パスワード強度チェック強化予定
 // - 大文字・小文字・数字・記号の組み合わせチェック
 // - よくあるパスワードのブラックリスト
 // - パスワード履歴チェック (過去5回分)
-export function isValidPassword(password: string): boolean {
-  return password.length >= 8
-}
+const passwordSchema = z.string()
+  .min(8, 'Password must be at least 8 characters long')
 
-function getEmailErrors(email?: string): readonly string[] {
-  if (!email) return ['Email is required']
-  if (!isValidEmail(email)) return ['Invalid email format']
-  return []
-}
+const emailSchema = z.string({ required_error: 'Email is required' })
+  .email('Invalid email format')
+  .min(1, 'Email is required')
 
-function getPasswordErrors(password?: string): readonly string[] {
-  if (!password) return ['Password is required']
-  if (!isValidPassword(password)) return ['Password must be at least 8 characters long']
-  return []
-}
+const registrationSchema = z.object({
+  email: emailSchema,
+  password: z.string({ required_error: 'Password is required' }).min(8, 'Password must be at least 8 characters long'),
+  firstName: z.string({ required_error: 'First name is required' }).min(1, 'First name is required'),
+  lastName: z.string({ required_error: 'Last name is required' }).min(1, 'Last name is required')
+})
 
-function getRequiredFieldError(fieldName: string, value?: string): readonly string[] {
-  return !value ? [`${fieldName} is required`] : []
-}
+const loginSchema = z.object({
+  email: emailSchema,
+  password: z.string({ required_error: 'Password is required' }).min(1, 'Password is required')
+})
 
 export function validateRegistrationInput(data: {
   email?: string
@@ -37,30 +34,57 @@ export function validateRegistrationInput(data: {
   firstName?: string
   lastName?: string
 }): Readonly<{ isValid: boolean; errors: readonly string[] }> {
-  const allErrors = [
-    ...getEmailErrors(data.email),
-    ...getPasswordErrors(data.password),
-    ...getRequiredFieldError('First name', data.firstName),
-    ...getRequiredFieldError('Last name', data.lastName)
-  ] as const
-
-  return Object.freeze({
-    isValid: allErrors.length === 0,
-    errors: Object.freeze(allErrors)
-  })
+  try {
+    registrationSchema.parse(data)
+    return Object.freeze({
+      isValid: true,
+      errors: Object.freeze([])
+    })
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      const errors = error.errors.map(err => err.message)
+      return Object.freeze({
+        isValid: false,
+        errors: Object.freeze(errors)
+      })
+    }
+    return Object.freeze({
+      isValid: false,
+      errors: Object.freeze(['Validation error'])
+    })
+  }
 }
 
 export function validateLoginInput(data: {
   email?: string
   password?: string
 }): Readonly<{ isValid: boolean; errors: readonly string[] }> {
-  const allErrors = [
-    ...getEmailErrors(data.email),
-    ...getRequiredFieldError('Password', data.password)
-  ] as const
+  try {
+    loginSchema.parse(data)
+    return Object.freeze({
+      isValid: true,
+      errors: Object.freeze([])
+    })
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      const errors = error.errors.map(err => err.message)
+      return Object.freeze({
+        isValid: false,
+        errors: Object.freeze(errors)
+      })
+    }
+    return Object.freeze({
+      isValid: false,
+      errors: Object.freeze(['Validation error'])
+    })
+  }
+}
 
-  return Object.freeze({
-    isValid: allErrors.length === 0,
-    errors: Object.freeze(allErrors)
-  })
+// Legacy functions for backward compatibility
+export function isValidEmail(email: string): boolean {
+  return emailSchema.safeParse(email).success
+}
+
+export function isValidPassword(password: string): boolean {
+  return passwordSchema.safeParse(password).success
 }

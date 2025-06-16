@@ -4,17 +4,17 @@ import {
   isValidPassword, 
   validateRegistrationInput, 
   validateLoginInput 
-} from '@/lib/validation'
+} from './validation'
 
-describe('validation utilities', () => {
+describe('バリデーションユーティリティ', () => {
   describe('isValidEmail', () => {
-    it('validates correct email formats', () => {
+    it('正しいメールアドレス形式を受け入れる', () => {
       expect(isValidEmail('test@example.com')).toBe(true)
       expect(isValidEmail('user.name+tag@domain.co.jp')).toBe(true)
       expect(isValidEmail('admin@sub.domain.com')).toBe(true)
     })
 
-    it('rejects invalid email formats', () => {
+    it('無効なメールアドレス形式を拒否する', () => {
       expect(isValidEmail('invalid-email')).toBe(false)
       expect(isValidEmail('@domain.com')).toBe(false)
       expect(isValidEmail('user@')).toBe(false)
@@ -23,12 +23,12 @@ describe('validation utilities', () => {
   })
 
   describe('isValidPassword', () => {
-    it('validates passwords with minimum length', () => {
+    it('最小長を満たすパスワードを受け入れる', () => {
       expect(isValidPassword('password123')).toBe(true)
       expect(isValidPassword('12345678')).toBe(true)
     })
 
-    it('rejects short passwords', () => {
+    it('短いパスワードを拒否する', () => {
       expect(isValidPassword('short')).toBe(false)
       expect(isValidPassword('1234567')).toBe(false)
       expect(isValidPassword('')).toBe(false)
@@ -36,7 +36,7 @@ describe('validation utilities', () => {
   })
 
   describe('validateRegistrationInput', () => {
-    it('returns immutable validation result for valid input', () => {
+    it('有効な入力に対してイミュータブルなバリデーション結果を返す', () => {
       const input = {
         email: 'test@example.com',
         password: 'password123',
@@ -52,7 +52,7 @@ describe('validation utilities', () => {
       expect(Object.isFrozen(result.errors)).toBe(true)
     })
 
-    it('returns immutable validation errors for invalid input', () => {
+    it('無効な入力に対してイミュータブルなバリデーションエラーを返す', () => {
       const input = {
         email: 'invalid-email',
         password: 'short',
@@ -71,7 +71,7 @@ describe('validation utilities', () => {
       expect(Object.isFrozen(result.errors)).toBe(true)
     })
 
-    it('does not mutate the result object', () => {
+    it('結果オブジェクトを変更できない', () => {
       const input = { email: 'test@example.com', password: 'password123', firstName: 'Test', lastName: 'User' }
       const result = validateRegistrationInput(input)
       
@@ -88,7 +88,7 @@ describe('validation utilities', () => {
   })
 
   describe('validateLoginInput', () => {
-    it('returns immutable validation result for valid input', () => {
+    it('有効な入力に対してイミュータブルなバリデーション結果を返す', () => {
       const input = {
         email: 'test@example.com',
         password: 'password123'
@@ -102,7 +102,7 @@ describe('validation utilities', () => {
       expect(Object.isFrozen(result.errors)).toBe(true)
     })
 
-    it('returns immutable validation errors for invalid input', () => {
+    it('無効な入力に対してイミュータブルなバリデーションエラーを返す', () => {
       const input = {
         email: 'invalid-email',
         password: ''
@@ -117,7 +117,7 @@ describe('validation utilities', () => {
       expect(Object.isFrozen(result.errors)).toBe(true)
     })
 
-    it('does not mutate the result object', () => {
+    it('結果オブジェクトを変更できない', () => {
       const input = { email: 'test@example.com', password: 'password123' }
       const result = validateLoginInput(input)
       

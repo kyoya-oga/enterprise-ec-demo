@@ -12,7 +12,7 @@ function createRequest(data: any) {
 
 let tmpDir: string
 let dataFile: string
-let POST: typeof import('@/app/api/login/route').POST
+let POST: typeof import('./route').POST
 
 beforeEach(async () => {
   tmpDir = mkdtempSync(path.join(os.tmpdir(), 'users-'))
@@ -34,7 +34,7 @@ beforeEach(async () => {
   
   process.env.USERS_FILE = dataFile
   vi.resetModules()
-  ;({ POST } = await import('@/app/api/login/route'))
+  ;({ POST } = await import('./route'))
 })
 
 afterEach(() => {
@@ -43,7 +43,7 @@ afterEach(() => {
 })
 
 describe('POST /api/login', () => {
-  it('successfully logs in with valid credentials', async () => {
+  it('有効な認証情報で正常にログインする', async () => {
     const req = createRequest({
       email: 'test@example.com',
       password: 'password123',
@@ -56,7 +56,7 @@ describe('POST /api/login', () => {
     expect(body.user.passwordHash).toBeUndefined()
   })
 
-  it('rejects invalid email', async () => {
+  it('無効なメールアドレスを拒否する', async () => {
     const req = createRequest({
       email: 'nonexistent@example.com',
       password: 'password123',
@@ -67,7 +67,7 @@ describe('POST /api/login', () => {
     expect(body.message).toBe('Invalid credentials')
   })
 
-  it('rejects invalid password', async () => {
+  it('無効なパスワードを拒否する', async () => {
     const req = createRequest({
       email: 'test@example.com',
       password: 'wrongpassword',
@@ -78,7 +78,7 @@ describe('POST /api/login', () => {
     expect(body.message).toBe('Invalid credentials')
   })
 
-  it('rejects missing fields', async () => {
+  it('不足しているフィールドを拒否する', async () => {
     const req = createRequest({ email: 'test@example.com' })
     const res = await POST(req)
     expect(res.status).toBe(400)
@@ -87,7 +87,7 @@ describe('POST /api/login', () => {
     expect(body.errors).toContain('Password is required')
   })
 
-  it('rejects invalid email format', async () => {
+  it('無効なメールアドレス形式を拒否する', async () => {
     const req = createRequest({
       email: 'invalid-email',
       password: 'password123',
@@ -99,7 +99,7 @@ describe('POST /api/login', () => {
     expect(body.errors).toContain('Invalid email format')
   })
 
-  it('handles case insensitive email matching', async () => {
+  it('大文字小文字を区別しないメールマッチングを処理する', async () => {
     const req = createRequest({
       email: 'TEST@EXAMPLE.COM',
       password: 'password123',
@@ -108,5 +108,6 @@ describe('POST /api/login', () => {
     expect(res.status).toBe(200)
     const body = await res.json()
     expect(body.message).toBe('Login successful')
+    expect(body.user.email).toBe('test@example.com')
   })
 })
