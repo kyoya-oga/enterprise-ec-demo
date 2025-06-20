@@ -26,7 +26,8 @@
     "react-dom": "^18.2.0",
     "tailwind-merge": "^3.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.25.64"
+    "zod": "^3.25.64",
+    "zustand": "^5.0.5"
   },
   "devDependencies": {
     "@playwright/test": "^1.53.0",

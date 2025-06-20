@@ -13,6 +13,8 @@ export function CartItemControls({ item, onUpdateQuantity, onRemove }: CartItemC
   const handleDecrease = () => {
     if (item.quantity > 1) {
       onUpdateQuantity?.(item.id, item.quantity - 1);
+    } else {
+      onRemove?.(item.id);
     }
   };
 
@@ -33,7 +35,6 @@ export function CartItemControls({ item, onUpdateQuantity, onRemove }: CartItemC
           size="sm"
           onClick={handleDecrease}
           className="w-8 h-8 p-0 hover:bg-red-50 hover:border-red-200"
-          disabled={item.quantity <= 1}
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
