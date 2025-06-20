@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { Button } from '@/components/ui'
 import { AddToCartButton } from '@/features/products/components'
 import type { Product } from '@/features/products/types'
+import { useCartStore } from '@/features/cart/store'
+import type { CartItem } from '@/features/cart/types'
 
 interface AddToCartSectionProps {
   product: Product
@@ -11,9 +13,19 @@ interface AddToCartSectionProps {
 
 export function AddToCartSection({ product }: AddToCartSectionProps) {
   const [quantity, setQuantity] = useState(1)
+  const addItem = useCartStore(state => state.addItem)
 
   const handleAddToCart = (product: Product) => {
-    console.log('Added to cart:', product, 'Quantity:', quantity)
+    const item: CartItem = {
+      id: Date.now(),
+      productId: product.id,
+      name: product.name,
+      price: product.price,
+      quantity,
+      image: product.image
+    }
+    addItem(item)
+    setQuantity(1)
   }
 
   return (
