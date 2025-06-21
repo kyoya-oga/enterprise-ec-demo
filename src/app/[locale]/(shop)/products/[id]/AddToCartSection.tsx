@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Button } from '@/components/ui'
 import { AddToCartButton } from '@/features/products/components'
 import type { Product } from '@/features/products/types'

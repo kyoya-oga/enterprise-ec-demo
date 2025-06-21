@@ -1,3 +1,4 @@
+import React from 'react'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { formatPrice } from '@/lib/utils'
@@ -35,7 +36,7 @@ export function CartSummary({ subtotal, shipping, total, locale }: CartSummaryPr
         className="w-full bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-semibold py-4 text-lg h-auto shadow-lg"
         asChild
       >
-        <a href={`/${locale}/checkout`}>レジに進む</a>
+        <a href={locale ? `/${locale}/checkout` : '/checkout'} className="w-full bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-semibold py-4 text-lg h-auto shadow-lg">レジに進む</a>
       </Button>
       
       <div className="mt-6 space-y-2">

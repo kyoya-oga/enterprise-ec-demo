@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { Button } from '@/components/ui';
 import { CartItem } from '../types';
 
@@ -35,6 +36,7 @@ export function CartItemControls({ item, onUpdateQuantity, onRemove }: CartItemC
           size="sm"
           onClick={handleDecrease}
           className="w-8 h-8 p-0 hover:bg-red-50 hover:border-red-200"
+          aria-label="minus"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
@@ -50,6 +52,7 @@ export function CartItemControls({ item, onUpdateQuantity, onRemove }: CartItemC
           size="sm"
           onClick={handleIncrease}
           className="w-8 h-8 p-0 hover:bg-red-50 hover:border-red-200"
+          aria-label="plus"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />

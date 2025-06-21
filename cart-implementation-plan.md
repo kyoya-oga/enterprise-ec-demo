@@ -1,196 +1,210 @@
-# カートページ機能実装計画
+# カートページ機能実装計画 - 更新版
 
-## 現在の実装状況
+## 現在の実装状況 (2024年更新)
 
-### 完了済み
-- ✅ UIコンポーネント（表示のみ）
-- ✅ TypeScript型定義
-- ✅ 基本的なページレイアウト
+### ✅ 完了済み機能（約80%完成）
 
-### 実装済みコンポーネント
-- `CartItem` - カートアイテム表示
-- `CartItemDisplay` - アイテム詳細表示
-- `CartItemControls` - 数量操作ボタン（未実装）
-- `CartSummary` - 注文サマリー表示
-- `EmptyCart` - 空カート表示
+#### 状態管理
+- ✅ **Zustandストア完全実装** (`src/features/cart/store/useCartStore.ts`)
+- ✅ **永続化機能** - localStorage連携済み
+- ✅ **全ての基本アクション** - addItem, removeItem, updateQuantity, clearCart
+- ✅ **計算プロパティ** - subtotal, total, itemCount
 
-## 実装が必要な機能
+#### UIコンポーネント（完全動作）
+- ✅ `CartItem` - カートアイテム表示（完成）
+- ✅ `CartItemDisplay` - アイテム詳細表示（完成）
+- ✅ `CartItemControls` - 数量操作ボタン（**完全実装済み**）
+- ✅ `CartSummary` - 注文サマリー表示（完成）
+- ✅ `EmptyCart` - 空カート表示（完成）
+- ✅ `AddToCartButton` - 商品追加ボタン（完成）
+- ✅ `AddToCartSection` - 商品追加セクション（完成）
 
-### 1. 状態管理の実装
-**優先度: 高**
+#### 基本機能
+- ✅ **カートページ** - 完全機能
+- ✅ **商品追加** - 商品詳細ページから動作
+- ✅ **数量変更** - 増減ボタン完全動作
+- ✅ **アイテム削除** - 削除ボタン動作
+- ✅ **在庫制限** - 最大在庫数での制限
+- ✅ **価格計算** - 基本計算完了
 
-**選択: Zustand**（軽量、TypeScript完全対応、最小依存方針に合致）
+## 残りの実装が必要な機能
 
-- Zustandストアでカート状態管理
-- `src/features/cart/store/useCartStore.ts` を作成
-- カートアイテムの追加/削除/更新機能
-- persist middleware でローカルストレージ永続化
+### 1. テストカバレッジの実装 🚨
+**優先度: 最高（要件不足）**
+
+現在テストカバレッジ0% - 80%要件に対して大きなギャップ
+
+#### 必要なテスト
+- **コンポーネントテスト** - CartItem, CartItemControls, CartSummary等
+- **Zustandストアテスト** - 全アクション・計算プロパティ
+- **統合テスト** - AddToCartButtonからカートページまでの流れ
+- **エッジケーステスト** - 在庫制限、数量0削除等
 
 ```typescript
-// Zustand store
-const useCartStore = create<CartStore>()(
-  persist(
-    (set, get) => ({
-      items: [],
-      addItem: (item) => set((state) => ({ 
-        items: [...state.items, item] 
-      })),
-      removeItem: (id) => set((state) => ({
-        items: state.items.filter(item => item.id !== id)
-      })),
-    }),
-    { name: 'cart-storage' }
-  )
-)
+// 実装例: src/tests/unit/features/cart/useCartStore.test.ts
+describe('useCartStore', () => {
+  test('should add item to cart', () => {
+    // テスト実装
+  })
+  test('should remove item from cart', () => {
+    // テスト実装  
+  })
+})
 ```
 
-**他の選択肢との比較**:
-- Context API: ボイラープレート多、パフォーマンス課題
-- Jotai: より複雑、カートには過剰
-- TanStack Query: サーバー状態管理が主目的
+### 2. エラーハンドリングの実装
+**優先度: 高（本番要件）**
 
-### 2. カートアイテム操作機能
-**優先度: 高**
-
-#### 2.1 数量変更機能
-- `CartItemControls` コンポーネントの実装
-- 数量増減ボタンの動作
-- 数量0での自動削除
-
-#### 2.2 アイテム削除機能
-- 削除ボタンの実装
-- 削除確認ダイアログ（オプション）
-
-### 3. 商品追加機能の連携
-**優先度: 高**
-
-- `AddToCartButton` の実装確認
-- 商品詳細ページからの追加動作
-- 成功/エラー状態の表示
-
-### 4. 価格計算の改善
-**優先度: 中**
-
-- 税金計算の実装
-- 送料計算ロジック
-- 割引・クーポン機能（将来的）
-
-### 5. チェックアウト連携
-**優先度: 中**
-
-- チェックアウトページへの遷移
-- カート情報の引き継ぎ
-- 在庫チェック機能
-
-### 6. エラーハンドリング
-**優先度: 中**
-
-- ネットワークエラー対応
-- 在庫不足エラー
+#### 2.1 エラー状態管理
+- ストアにerror状態追加
+- loading状態の管理
 - ユーザーフレンドリーなエラー表示
 
-### 7. パフォーマンス最適化
+#### 2.2 エラーケース対応
+- ネットワークエラー処理
+- 在庫不足エラー
+- セッション期限切れ対応
+
+### 3. 価格計算の改善
+**優先度: 中**
+
+現在は固定値使用 - 動的計算への移行
+
+#### 3.1 税金計算
+- 現在: 税込み価格のみ表示
+- 改善: 税率を設定ファイルで管理
+
+#### 3.2 送料計算
+- 現在: 固定500円
+- 改善: 地域別・重量別・金額別送料
+
+### 4. 補助機能とユーティリティ
+**優先度: 低**
+
+#### 4.1 カスタムフック
+- `useCartActions.ts` - アクションヘルパー
+- `useCartCalculations.ts` - 計算ロジック
+
+#### 4.2 ユーティリティ関数
+- `cartCalculations.ts` - 価格計算関数
+
+### 5. パフォーマンス最適化
 **優先度: 低**
 
 - React.memo による最適化
 - 不要な再レンダリング防止
 - 大量アイテム時の仮想化
 
-## 実装手順
+## 更新後の実装手順
 
-### フェーズ1: 状態管理基盤
-1. CartContext の作成
-2. useCart hook の実装
-3. ローカルストレージ連携
+### ✅ フェーズ1: 状態管理基盤（完了）
+1. ✅ Zustandストア作成済み
+2. ✅ 永続化実装済み
+3. ✅ 全基本機能動作
 
-### フェーズ2: 基本操作機能
-1. 数量変更機能
-2. アイテム削除機能
-3. 商品追加連携
+### ✅ フェーズ2: 基本操作機能（完了）
+1. ✅ 数量変更機能実装済み
+2. ✅ アイテム削除機能実装済み
+3. ✅ 商品追加連携完了
 
-### フェーズ3: 高度な機能
-1. 価格計算改善
-2. エラーハンドリング
-3. チェックアウト連携
+### 🚨 フェーズ3: テストと品質保証（急務）
+1. **テストスイート作成** - ストア、コンポーネント、統合
+2. **エラーハンドリング** - 本番レベルの堅牢性
+3. **品質チェック** - TypeScript strict, lint通過
 
-### フェーズ4: 最適化
-1. パフォーマンス改善
-2. ユーザビリティ向上
+### 📈 フェーズ4: 改善と最適化（将来）
+1. 動的価格計算
+2. パフォーマンス改善
 3. アクセシビリティ対応
 
-## 技術実装詳細
+## 実装済み技術詳細
 
-### 状態管理アーキテクチャ
+### ✅ 完成済み状態管理アーキテクチャ
 ```typescript
-// Zustand store型定義
+// 実装済み: src/features/cart/store/useCartStore.ts
 interface CartStore {
   items: CartItem[]
-  loading: boolean
-  error: string | null
-  
-  // Actions
+  // Actions (実装済み)
   addItem: (item: Omit<CartItem, 'id'>) => void
-  removeItem: (id: number) => void
+  removeItem: (id: number) => void  
   updateQuantity: (id: number, quantity: number) => void
   clearCart: () => void
-  
-  // Computed values
+  // Computed values (実装済み)
   subtotal: number
   total: number
   itemCount: number
 }
 ```
 
-### 必要なファイル
+### ✅ 実装済みファイル構成
 ```
-src/features/cart/
+src/features/cart/ 
 ├── store/
-│   ├── useCartStore.ts       # Zustand store
-│   └── index.ts              # exports
-├── hooks/
-│   ├── useCartActions.ts     # 便利なaction hooks
-│   ├── useCartCalculations.ts # 計算ロジック
-│   └── index.ts             # exports
-├── utils/
-│   ├── cartCalculations.ts   # 価格計算ユーティリティ
-│   └── index.ts             # exports
+│   ├── useCartStore.ts       # ✅ Zustand store実装済み
+│   └── index.ts              # ✅ exports設定済み
+├── components/               # ✅ 全コンポーネント動作
+│   ├── CartItem.tsx
+│   ├── CartItemDisplay.tsx
+│   ├── CartItemControls.tsx
+│   ├── CartSummary.tsx
+│   ├── EmptyCart.tsx
+│   ├── AddToCartButton.tsx
+│   └── AddToCartSection.tsx
+├── hooks/                    # ❌ 空ディレクトリ
+├── utils/                    # ❌ 空ディレクトリ
+└── types/                    # ✅ 型定義完了
 ```
 
-### 依存関係
+### ✅ 依存関係（完了）
 ```bash
-npm install zustand
-# persist middleware は zustand に含まれる
+# 既にインストール済み
+zustand: "^5.0.5"
 ```
 
-### テスト戦略
-- 各コンポーネントの単体テスト
-- Context/hooks の統合テスト
-- ユーザーフロー全体のE2Eテスト
+## 完了の定義（更新版）
 
-## 完了の定義
+### ✅ 最小機能要件（完了）
+- [x] アイテムの追加/削除/数量変更
+- [x] 価格計算の正確性（基本レベル）
+- [x] ローカルストレージ永続化
+- [ ] エラーハンドリング **← 残りの要件**
 
-### 最小機能要件
-- [ ] アイテムの追加/削除/数量変更
-- [ ] 価格計算の正確性
-- [ ] ローカルストレージ永続化
-- [ ] エラーハンドリング
-
-### 品質要件
-- [ ] TypeScript型安全性
-- [ ] 80%以上のテストカバレッジ
+### ⚠️ 品質要件（部分完了）
+- [x] TypeScript型安全性
+- [ ] 80%以上のテストカバレッジ **← 0%で大きなギャップ**
+- [x] レスポンシブデザイン
 - [ ] アクセシビリティ対応
-- [ ] レスポンシブデザイン
 
-## 推定工数
-- フェーズ1: 2-3日
-- フェーズ2: 2-3日  
-- フェーズ3: 3-4日
-- フェーズ4: 1-2日
+## 更新後の推定工数
+- ✅ フェーズ1-2: 完了 (4-6日相当)
+- 🚨 フェーズ3: 2-3日 (テスト + エラーハンドリング)
+- 📈 フェーズ4: 1-2日 (最適化)
 
-**総計: 8-12日**
+**残り工数: 3-5日**
 
-## 注意事項
-- 既存のUIデザインを維持する
-- 国際化（i18n）対応を考慮
-- SEO影響を最小限に抑える
-- モバイルファーストで実装
+## 次のアクション項目
+
+### 🚨 最優先（品質要件）
+1. **テストカバレッジ80%達成**
+   - useCartStore単体テスト
+   - 全コンポーネントテスト 
+   - 統合テスト（商品追加→カート表示→チェックアウト）
+
+2. **エラーハンドリング実装**
+   - ストアにloading/error状態追加
+   - ネットワークエラー・在庫エラー対応
+   - ユーザビリティ向上
+
+### 📈 改善項目（中優先度）
+1. **動的価格計算**: 税率・送料の設定化
+2. **ユーティリティ関数**: hooks/utils ディレクトリ実装
+3. **パフォーマンス最適化**: React.memo等
+
+### ✅ 成果サマリー
+**カート機能は実用レベルで完成 - 残りは品質向上のみ**
+- 状態管理: Zustand完全実装
+- 基本操作: 全て動作（追加・削除・更新）
+- UI/UX: 完全動作
+- 商品連携: 完了
+
+**テストカバレッジの実装が最重要課題**
