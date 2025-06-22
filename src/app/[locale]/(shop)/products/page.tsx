@@ -8,7 +8,7 @@ export default async function ProductsPage() {
   }>('/api/products');
 
   return (
-    <div className="min-h-screen bg-zinc-950 relative overflow-hidden">
+    <div className="min-h-screen bg-zinc-900 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 via-transparent to-pink-500/5"></div>
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-red-500/10 rounded-full blur-3xl"></div>

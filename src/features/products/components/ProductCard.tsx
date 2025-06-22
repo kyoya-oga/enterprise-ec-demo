@@ -13,9 +13,9 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   const { locale } = useParams() as { locale: string }
   return (
-    <Card className="bg-zinc-900/80 backdrop-blur-sm border-zinc-800 hover:shadow-xl hover:border-zinc-700 transition-all duration-300 group overflow-hidden">
+    <Card className="bg-zinc-800/80 backdrop-blur-sm border-zinc-700 hover:shadow-xl hover:border-zinc-600 transition-all duration-300 group overflow-hidden">
       <Link href={`/${locale}/products/${product.id}`} className="block">
-        <div className="aspect-square bg-zinc-800 flex items-center justify-center overflow-hidden relative">
+        <div className="aspect-square bg-zinc-700 flex items-center justify-center overflow-hidden relative">
           {product.image ? (
             <Image
               src={product.image}

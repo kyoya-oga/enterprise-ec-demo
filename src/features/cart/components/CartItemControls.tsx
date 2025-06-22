@@ -43,7 +43,7 @@ export function CartItemControls({ item, onUpdateQuantity, onRemove }: CartItemC
           </svg>
         </Button>
         
-        <span className="w-8 text-center font-medium text-zinc-900">
+        <span className="w-8 text-center font-medium text-zinc-900 dark:text-zinc-200">
           {item.quantity}
         </span>
         
