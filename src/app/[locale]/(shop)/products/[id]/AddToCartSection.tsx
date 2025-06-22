@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui'
 import { AddToCartButton } from '@/features/products/components'
 import { ErrorDisplay } from '@/features/cart/components'
@@ -10,10 +11,12 @@ import type { CartItem } from '@/features/cart/types'
 
 interface AddToCartSectionProps {
   product: Product
+  locale: string
 }
 
-export function AddToCartSection({ product }: AddToCartSectionProps) {
+export function AddToCartSection({ product, locale }: AddToCartSectionProps) {
   const [quantity, setQuantity] = useState(1)
+  const router = useRouter()
   const addItem = useCartStore(state => state.addItem)
   const isLoading = useCartStore(state => state.isLoading)
   const error = useCartStore(state => state.error)
@@ -21,7 +24,7 @@ export function AddToCartSection({ product }: AddToCartSectionProps) {
 
   const handleAddToCart = async (product: Product) => {
     const item: CartItem = {
-      id: Date.now(),
+      id: product.id, // productIdと同じ値を使用
       productId: product.id,
       name: product.name,
       price: product.price,
@@ -29,9 +32,11 @@ export function AddToCartSection({ product }: AddToCartSectionProps) {
       image: product.image
     }
     await addItem(item)
-    // 成功時のみ数量をリセット
+    
+    // 成功時にカートページに遷移
     if (!useCartStore.getState().error) {
       setQuantity(1)
+      router.push(`/${locale}/cart`)
     }
   }
 

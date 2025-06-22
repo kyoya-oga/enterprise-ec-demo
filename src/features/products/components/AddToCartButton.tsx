@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react'
 import type { Product } from '@/features/products/types'
 import { Button } from '@/components/ui'
 import { LoadingSpinner } from '@/features/cart/components'

@@ -41,7 +41,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
           <ProductImage product={product} />
           
           <div className="space-y-6">
-            <ProductInfo product={product} />
+            <ProductInfo product={product} locale={params.locale} />
             <ProductSpecifications product={product} />
           </div>
         </div>

@@ -90,7 +90,7 @@ describe('カートに追加統合フロー', () => {
 
   describe('商品追加セクション機能', () => {
     test('デフォルト数量で商品をカートに追加する', async () => {
-      render(<AddToCartSection product={mockProduct} />)
+      render(<AddToCartSection product={mockProduct} locale="ja" />)
       
       const addButton = screen.getByRole('button', { name: 'カートに追加' })
       fireEvent.click(addButton)
@@ -106,7 +106,7 @@ describe('カートに追加統合フロー', () => {
     })
 
     test('選択した数量で商品を追加する', async () => {
-      render(<AddToCartSection product={mockProduct} />)
+      render(<AddToCartSection product={mockProduct} locale="ja" />)
       
       // Increase quantity to 3
       const increaseButton = screen.getByRole('button', { name: '+' })
@@ -125,7 +125,7 @@ describe('カートに追加統合フロー', () => {
     })
 
     test('数量増加時に在庫制限を守る', async () => {
-      render(<AddToCartSection product={mockProduct} />)
+      render(<AddToCartSection product={mockProduct} locale="ja" />)
       
       const increaseButton = screen.getByRole('button', { name: '+' })
       
@@ -146,7 +146,7 @@ describe('カートに追加統合フロー', () => {
     })
 
     test('カート追加後に数量を1にリセットする', async () => {
-      render(<AddToCartSection product={mockProduct} />)
+      render(<AddToCartSection product={mockProduct} locale="ja" />)
       
       // Set quantity to 3
       const increaseButton = screen.getByRole('button', { name: '+' })
@@ -168,7 +168,7 @@ describe('カートに追加統合フロー', () => {
     test('在庫切れ商品を適切に処理する', async () => {
       const outOfStockProduct = { ...mockProduct, stock: 0 }
       
-      render(<AddToCartSection product={outOfStockProduct} />)
+      render(<AddToCartSection product={outOfStockProduct} locale="ja" />)
       
       // Should show out of stock message
       expect(screen.getByRole('button', { name: '在庫切れ' })).toBeInTheDocument()
@@ -184,7 +184,7 @@ describe('カートに追加統合フロー', () => {
 
   describe('カート状態統合', () => {
     test('アイテム追加時にカート計算を更新する', async () => {
-      render(<AddToCartSection product={mockProduct} />)
+      render(<AddToCartSection product={mockProduct} locale="ja" />)
       
       // Add item to cart
       const addButton = screen.getByRole('button', { name: 'カートに追加' })
@@ -197,7 +197,7 @@ describe('カートに追加統合フロー', () => {
     })
 
     test('同じ商品の複数追加を処理する', async () => {
-      render(<AddToCartSection product={mockProduct} />)
+      render(<AddToCartSection product={mockProduct} locale="ja" />)
       
       const addButton = screen.getByRole('button', { name: 'カートに追加' })
       
@@ -212,7 +212,7 @@ describe('カートに追加統合フロー', () => {
     })
 
     test('カートアイテムに一意のIDを生成する', async () => {
-      render(<AddToCartSection product={mockProduct} />)
+      render(<AddToCartSection product={mockProduct} locale="ja" />)
       
       const addButton = screen.getByRole('button', { name: 'カートに追加' })
       
@@ -233,7 +233,7 @@ describe('カートに追加統合フロー', () => {
   describe('カート表示統合', () => {
     test('追加後にカートアイテムを正しく表示する', async () => {
       // Add item to cart first
-      render(<AddToCartSection product={mockProduct} />)
+      render(<AddToCartSection product={mockProduct} locale="ja" />)
       const addButton = screen.getByRole('button', { name: 'カートに追加' })
       fireEvent.click(addButton)
       
@@ -258,7 +258,7 @@ describe('カートに追加統合フロー', () => {
 
     test('カート合計で正しい金額を表示する', async () => {
       // Add multiple items with different quantities
-      render(<AddToCartSection product={mockProduct} />)
+      render(<AddToCartSection product={mockProduct} locale="ja" />)
       
       // Increase quantity to 2
       const increaseButton = screen.getByRole('button', { name: '+' })
@@ -289,7 +289,7 @@ describe('カートに追加統合フロー', () => {
 
   describe('エッジケースとエラーハンドリング', () => {
     test('連続クリックを適切に処理する', async () => {
-      render(<AddToCartSection product={mockProduct} />)
+      render(<AddToCartSection product={mockProduct} locale="ja" />)
       
       const addButton = screen.getByRole('button', { name: 'カートに追加' })
       
@@ -306,7 +306,7 @@ describe('カートに追加統合フロー', () => {
     test('価格ゼロの商品を処理する', async () => {
       const freeProduct = { ...mockProduct, price: 0 }
       
-      render(<AddToCartSection product={freeProduct} />)
+      render(<AddToCartSection product={freeProduct} locale="ja" />)
       
       const addButton = screen.getByRole('button', { name: 'カートに追加' })
       fireEvent.click(addButton)
@@ -319,7 +319,7 @@ describe('カートに追加統合フロー', () => {
     test('大量在庫商品を処理する', async () => {
       const highStockProduct = { ...mockProduct, stock: 9999 }
       
-      render(<AddToCartSection product={highStockProduct} />)
+      render(<AddToCartSection product={highStockProduct} locale="ja" />)
       
       const increaseButton = screen.getByRole('button', { name: '+' })
       
@@ -333,7 +333,7 @@ describe('カートに追加統合フロー', () => {
     })
 
     test('数量を最小値まで減らすことを処理する', async () => {
-      render(<AddToCartSection product={mockProduct} />)
+      render(<AddToCartSection product={mockProduct} locale="ja" />)
       
       const decreaseButton = screen.getByRole('button', { name: '-' })
       
@@ -353,7 +353,7 @@ describe('カートに追加統合フロー', () => {
         name: '特殊文字テスト: !@#$%^&*()'
       }
       
-      render(<AddToCartSection product={specialProduct} />)
+      render(<AddToCartSection product={specialProduct} locale="ja" />)
       
       const addButton = screen.getByRole('button', { name: 'カートに追加' })
       fireEvent.click(addButton)
@@ -365,7 +365,7 @@ describe('カートに追加統合フロー', () => {
     test('非常に高額な商品を処理する', async () => {
       const expensiveProduct = { ...mockProduct, price: 999999 }
       
-      render(<AddToCartSection product={expensiveProduct} />)
+      render(<AddToCartSection product={expensiveProduct} locale="ja" />)
       
       const addButton = screen.getByRole('button', { name: 'カートに追加' })
       fireEvent.click(addButton)
@@ -378,7 +378,7 @@ describe('カートに追加統合フロー', () => {
     test('在庫1個の商品を処理する', async () => {
       const limitedProduct = { ...mockProduct, stock: 1 }
       
-      render(<AddToCartSection product={limitedProduct} />)
+      render(<AddToCartSection product={limitedProduct} locale="ja" />)
       
       // Should not be able to increase quantity above 1
       const increaseButton = screen.getByRole('button', { name: '+' })

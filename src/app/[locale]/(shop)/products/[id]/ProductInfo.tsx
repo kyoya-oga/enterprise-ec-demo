@@ -3,9 +3,10 @@ import { AddToCartSection } from './AddToCartSection'
 
 interface ProductInfoProps {
   product: Product
+  locale: string
 }
 
-export function ProductInfo({ product }: ProductInfoProps) {
+export function ProductInfo({ product, locale }: ProductInfoProps) {
   return (
     <div className="space-y-6">
       {/* Category */}
@@ -70,7 +71,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       </div>
 
       {/* Add to Cart Section - Client Component */}
-      <AddToCartSection product={product} />
+      <AddToCartSection product={product} locale={locale} />
     </div>
   )
 }

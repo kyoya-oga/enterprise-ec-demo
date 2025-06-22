@@ -70,19 +70,19 @@ export const useCartStore = create<CartStore>()(
         await handleAsyncOperation(
           () => {
             // 在庫チェック
-            checkInventory(item.id, item.quantity)
+            checkInventory(item.productId, item.quantity)
             
             const state = get()
-            const existingItem = state.items.find(i => i.id === item.id)
+            const existingItem = state.items.find(i => i.productId === item.productId)
             
             let newItems: CartItem[]
             if (existingItem) {
               const newQuantity = existingItem.quantity + item.quantity
               // 在庫チェック（合計数量）
-              checkInventory(item.id, newQuantity)
+              checkInventory(item.productId, newQuantity)
               
               newItems = state.items.map(i =>
-                i.id === item.id ? { ...i, quantity: newQuantity } : i
+                i.productId === item.productId ? { ...i, quantity: newQuantity } : i
               )
             } else {
               newItems = [...state.items, item]
@@ -110,12 +110,14 @@ export const useCartStore = create<CartStore>()(
       updateQuantity: async (id, quantity) => {
         await handleAsyncOperation(
           () => {
+            const state = get()
+            const targetItem = state.items.find(item => item.id === id)
+            
             // 在庫チェック
-            if (quantity > 0) {
-              checkInventory(id, quantity)
+            if (quantity > 0 && targetItem) {
+              checkInventory(targetItem.productId, quantity)
             }
             
-            const state = get()
             const newItems = state.items
               .map((item) =>
                 item.id === id ? { ...item, quantity } : item
