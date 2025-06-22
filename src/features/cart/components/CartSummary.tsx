@@ -12,7 +12,7 @@ interface CartSummaryProps {
 
 export function CartSummary({ subtotal, shipping, total, locale }: CartSummaryProps) {
   return (
-    <Card className="p-8 sticky top-8 bg-zinc-700 border-zinc-600">
+    <Card className="p-8 sticky top-8 bg-slate-700 border-slate-600">
       <h3 className="font-semibold text-2xl text-white mb-8">注文サマリー</h3>
       
       <div className="space-y-6 mb-8">

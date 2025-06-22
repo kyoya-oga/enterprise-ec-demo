@@ -15,7 +15,7 @@ export function ProductList({ products }: ProductListProps) {
     return (
       <div className="text-center py-12">
         <div className="max-w-md mx-auto">
-          <div className="w-16 h-16 mx-auto mb-4 bg-zinc-700 rounded-full flex items-center justify-center">
+          <div className="w-16 h-16 mx-auto mb-4 bg-slate-700 rounded-full flex items-center justify-center">
             <svg className="w-8 h-8 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
             </svg>
@@ -30,8 +30,8 @@ export function ProductList({ products }: ProductListProps) {
   return (
     <div className="space-y-4">
         {products.map((product) => (
-        <div key={product.id} className="bg-zinc-800 rounded-lg p-4 flex items-center space-x-4">
-          <div className="w-20 h-20 bg-zinc-700 rounded-lg flex-shrink-0 overflow-hidden">
+        <div key={product.id} className="bg-slate-700 rounded-lg p-4 flex items-center space-x-4">
+          <div className="w-20 h-20 bg-slate-600 rounded-lg flex-shrink-0 overflow-hidden">
             <img
               src={product.image}
               alt={product.name}

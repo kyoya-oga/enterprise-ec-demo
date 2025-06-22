@@ -51,7 +51,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
 
       {/* Description */}
         {product.description && (
-        <div className="bg-zinc-800/50 backdrop-blur-sm border border-zinc-700 rounded-lg p-6">
+        <div className="bg-slate-700/40 backdrop-blur-sm border border-slate-600 rounded-lg p-6">
           <h3 className="text-lg font-semibold text-white mb-3">商品説明</h3>
           <p className="text-zinc-300 leading-relaxed">{product.description}</p>
         </div>

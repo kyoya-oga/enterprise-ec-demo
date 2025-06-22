@@ -22,11 +22,11 @@ export function ProductFilters({
         <select
           value={selectedCategory}
           onChange={(e) => onCategoryChange(e.target.value)}
-          className="w-full px-3 py-2 bg-zinc-800/80 backdrop-blur-sm border border-zinc-700 rounded-md text-zinc-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+          className="w-full px-3 py-2 bg-slate-700/70 backdrop-blur-sm border border-slate-600 rounded-md text-slate-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
         >
           <option value="all">すべて</option>
           {categories.map((category) => (
-            <option key={category} value={category} className="bg-zinc-800">
+            <option key={category} value={category} className="bg-slate-700">
               {category}
             </option>
           ))}
@@ -38,12 +38,12 @@ export function ProductFilters({
         <select
           value={sortBy}
           onChange={(e) => onSortChange(e.target.value as any)}
-          className="w-full px-3 py-2 bg-zinc-800/80 backdrop-blur-sm border border-zinc-700 rounded-md text-zinc-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+          className="w-full px-3 py-2 bg-slate-700/70 backdrop-blur-sm border border-slate-600 rounded-md text-slate-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
         >
-          <option value="newest" className="bg-zinc-800">新着順</option>
-          <option value="price_asc" className="bg-zinc-800">価格: 安い順</option>
-          <option value="price_desc" className="bg-zinc-800">価格: 高い順</option>
-          <option value="rating" className="bg-zinc-800">評価順</option>
+          <option value="newest" className="bg-slate-700">新着順</option>
+          <option value="price_asc" className="bg-slate-700">価格: 安い順</option>
+          <option value="price_desc" className="bg-slate-700">価格: 高い順</option>
+          <option value="rating" className="bg-slate-700">評価順</option>
         </select>
       </div>
     </div>
