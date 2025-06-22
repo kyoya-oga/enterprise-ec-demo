@@ -7,11 +7,12 @@ import { CartItemControls } from './CartItemControls';
 
 interface CartItemDisplayProps {
   item: CartItem;
-  onUpdateQuantity?: (id: number, quantity: number) => void;
-  onRemove?: (id: number) => void;
+  onUpdateQuantity?: (id: number, quantity: number) => Promise<void>;
+  onRemove?: (id: number) => Promise<void>;
+  isLoading?: boolean;
 }
 
-export function CartItemDisplay({ item, onUpdateQuantity, onRemove }: CartItemDisplayProps) {
+export function CartItemDisplay({ item, onUpdateQuantity, onRemove, isLoading }: CartItemDisplayProps) {
   return (
     <Card className="overflow-hidden transition-all duration-200 hover:shadow-md">
       <CardContent className="p-4">
@@ -44,6 +45,7 @@ export function CartItemDisplay({ item, onUpdateQuantity, onRemove }: CartItemDi
             item={item}
             onUpdateQuantity={onUpdateQuantity}
             onRemove={onRemove}
+            isLoading={isLoading}
           />
         </div>
 

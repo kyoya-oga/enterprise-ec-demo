@@ -2,26 +2,34 @@
 
 import type { Product } from '@/features/products/types'
 import { Button } from '@/components/ui'
+import { LoadingSpinner } from '@/features/cart/components'
 
 interface AddToCartButtonProps {
   product: Product
-  onAddToCart?: (product: Product) => void
+  onAddToCart?: (product: Product) => Promise<void>
   className?: string
+  isLoading?: boolean
 }
 
-export function AddToCartButton({ product, onAddToCart, className }: AddToCartButtonProps) {
-  const handleAddToCart = () => {
-    onAddToCart?.(product)
+export function AddToCartButton({ product, onAddToCart, className, isLoading = false }: AddToCartButtonProps) {
+  const handleAddToCart = async () => {
+    await onAddToCart?.(product)
   }
 
   return (
     <Button
       onClick={handleAddToCart}
-      disabled={product.stock === 0}
+      disabled={product.stock === 0 || isLoading}
       className={className || "w-full"}
       variant="default"
     >
-      {product.stock > 0 ? 'カートに追加' : '在庫切れ'}
+      {isLoading ? (
+        <LoadingSpinner size="sm" />
+      ) : product.stock > 0 ? (
+        'カートに追加'
+      ) : (
+        '在庫切れ'
+      )}
     </Button>
   )
 }

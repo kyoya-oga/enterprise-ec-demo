@@ -1,12 +1,15 @@
 'use client'
 
-import { CartItem, CartSummary, EmptyCart } from '@/features/cart/components'
+import { CartItem, CartSummary, EmptyCart, ErrorDisplay } from '@/features/cart/components'
 import { useCartStore } from '@/features/cart/store'
 
 export default function CartPage({ params: { locale } }: { params: { locale: string } }) {
   const items = useCartStore(state => state.items)
+  const isLoading = useCartStore(state => state.isLoading)
+  const error = useCartStore(state => state.error)
   const updateQuantity = useCartStore(state => state.updateQuantity)
   const removeItem = useCartStore(state => state.removeItem)
+  const clearError = useCartStore(state => state.clearError)
   const subtotal = useCartStore(state => state.subtotal)
   const shipping = items.length > 0 ? 500 : 0
   const total = subtotal + shipping
@@ -16,6 +19,13 @@ export default function CartPage({ params: { locale } }: { params: { locale: str
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-4xl font-bold text-white mb-12">ショッピングカート</h1>
+          
+          {/* エラー表示 */}
+          {error && (
+            <div className="mb-6">
+              <ErrorDisplay error={error} onDismiss={clearError} />
+            </div>
+          )}
           
           {items.length === 0 ? (
             <EmptyCart locale={locale} />
@@ -32,6 +42,7 @@ export default function CartPage({ params: { locale } }: { params: { locale: str
                     item={item}
                     onUpdateQuantity={updateQuantity}
                     onRemove={removeItem}
+                    isLoading={isLoading}
                   />
                 ))}
               </div>

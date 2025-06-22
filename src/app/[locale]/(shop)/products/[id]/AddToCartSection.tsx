@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { Button } from '@/components/ui'
 import { AddToCartButton } from '@/features/products/components'
+import { ErrorDisplay } from '@/features/cart/components'
 import type { Product } from '@/features/products/types'
 import { useCartStore } from '@/features/cart/store'
 import type { CartItem } from '@/features/cart/types'
@@ -14,8 +15,11 @@ interface AddToCartSectionProps {
 export function AddToCartSection({ product }: AddToCartSectionProps) {
   const [quantity, setQuantity] = useState(1)
   const addItem = useCartStore(state => state.addItem)
+  const isLoading = useCartStore(state => state.isLoading)
+  const error = useCartStore(state => state.error)
+  const clearError = useCartStore(state => state.clearError)
 
-  const handleAddToCart = (product: Product) => {
+  const handleAddToCart = async (product: Product) => {
     const item: CartItem = {
       id: Date.now(),
       productId: product.id,
@@ -24,12 +28,20 @@ export function AddToCartSection({ product }: AddToCartSectionProps) {
       quantity,
       image: product.image
     }
-    addItem(item)
-    setQuantity(1)
+    await addItem(item)
+    // 成功時のみ数量をリセット
+    if (!useCartStore.getState().error) {
+      setQuantity(1)
+    }
   }
 
   return (
     <div className="space-y-4">
+      {/* エラー表示 */}
+      {error && (
+        <ErrorDisplay error={error} onDismiss={clearError} />
+      )}
+
       {/* Quantity Selector */}
       {product.stock > 0 && (
         <div className="flex items-center gap-3">
@@ -39,7 +51,8 @@ export function AddToCartSection({ product }: AddToCartSectionProps) {
               variant="outline"
               size="sm"
               onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              className="px-3 py-1 border-zinc-700 text-zinc-300 hover:border-zinc-600"
+              disabled={isLoading}
+              className="px-3 py-1 border-zinc-700 text-zinc-300 hover:border-zinc-600 disabled:opacity-50"
             >
               -
             </Button>
@@ -50,7 +63,8 @@ export function AddToCartSection({ product }: AddToCartSectionProps) {
               variant="outline"
               size="sm"
               onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
-              className="px-3 py-1 border-zinc-700 text-zinc-300 hover:border-zinc-600"
+              disabled={isLoading}
+              className="px-3 py-1 border-zinc-700 text-zinc-300 hover:border-zinc-600 disabled:opacity-50"
             >
               +
             </Button>
@@ -63,6 +77,7 @@ export function AddToCartSection({ product }: AddToCartSectionProps) {
         <AddToCartButton 
           product={product} 
           onAddToCart={handleAddToCart}
+          isLoading={isLoading}
           className="w-full py-3 text-lg"
         />
       </div>

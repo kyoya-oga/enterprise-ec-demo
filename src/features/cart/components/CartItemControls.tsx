@@ -3,29 +3,35 @@
 import React from 'react';
 import { Button } from '@/components/ui';
 import { CartItem } from '../types';
+import { LoadingSpinner } from './LoadingSpinner';
 
 interface CartItemControlsProps {
   item: CartItem;
-  onUpdateQuantity?: (id: number, quantity: number) => void;
-  onRemove?: (id: number) => void;
+  onUpdateQuantity?: (id: number, quantity: number) => Promise<void>;
+  onRemove?: (id: number) => Promise<void>;
+  isLoading?: boolean;
 }
 
-export function CartItemControls({ item, onUpdateQuantity, onRemove }: CartItemControlsProps) {
-  const handleDecrease = () => {
+export function CartItemControls({ item, onUpdateQuantity, onRemove, isLoading = false }: CartItemControlsProps) {
+  const handleDecrease = async () => {
     if (item.quantity > 1) {
-      onUpdateQuantity?.(item.id, item.quantity - 1);
+      await onUpdateQuantity?.(item.id, item.quantity - 1);
     } else {
-      onRemove?.(item.id);
+      await onRemove?.(item.id);
     }
   };
 
-  const handleIncrease = () => {
-    onUpdateQuantity?.(item.id, item.quantity + 1);
+  const handleIncrease = async () => {
+    await onUpdateQuantity?.(item.id, item.quantity + 1);
   };
 
-  const handleRemove = () => {
-    onRemove?.(item.id);
+  const handleRemove = async () => {
+    await onRemove?.(item.id);
   };
+
+  if (isLoading) {
+    return <LoadingSpinner size="sm" />
+  }
 
   return (
     <>
@@ -35,7 +41,8 @@ export function CartItemControls({ item, onUpdateQuantity, onRemove }: CartItemC
           variant="outline"
           size="sm"
           onClick={handleDecrease}
-          className="w-8 h-8 p-0 hover:bg-red-50 hover:border-red-200"
+          disabled={isLoading}
+          className="w-8 h-8 p-0 hover:bg-red-50 hover:border-red-200 disabled:opacity-50"
           aria-label="minus"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -51,7 +58,8 @@ export function CartItemControls({ item, onUpdateQuantity, onRemove }: CartItemC
           variant="outline"
           size="sm"
           onClick={handleIncrease}
-          className="w-8 h-8 p-0 hover:bg-red-50 hover:border-red-200"
+          disabled={isLoading}
+          className="w-8 h-8 p-0 hover:bg-red-50 hover:border-red-200 disabled:opacity-50"
           aria-label="plus"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -65,7 +73,8 @@ export function CartItemControls({ item, onUpdateQuantity, onRemove }: CartItemC
         variant="ghost"
         size="sm"
         onClick={handleRemove}
-        className="w-8 h-8 p-0 text-zinc-400 hover:text-red-500 hover:bg-red-50"
+        disabled={isLoading}
+        className="w-8 h-8 p-0 text-zinc-400 hover:text-red-500 hover:bg-red-50 disabled:opacity-50"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
