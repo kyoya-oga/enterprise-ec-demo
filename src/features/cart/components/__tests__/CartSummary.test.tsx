@@ -137,7 +137,7 @@ describe('カートサマリー', () => {
     test('レイアウトに適切なCSSクラスを持つ', () => {
       const { container } = render(<CartSummary {...defaultProps} />)
       
-      const card = container.querySelector('.bg-zinc-800')
+      const card = container.querySelector('.bg-slate-700')
       expect(card).toBeInTheDocument()
       expect(card).toHaveClass('p-8', 'sticky', 'top-8')
     })

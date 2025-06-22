@@ -12,7 +12,7 @@ export default function CartPage({ params: { locale } }: { params: { locale: str
   const total = subtotal + shipping
 
   return (
-    <div className="min-h-screen bg-zinc-900">
+    <div className="min-h-screen bg-slate-800">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-4xl font-bold text-white mb-12">ショッピングカート</h1>

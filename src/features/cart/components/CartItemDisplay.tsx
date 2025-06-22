@@ -31,7 +31,7 @@ export function CartItemDisplay({ item, onUpdateQuantity, onRemove }: CartItemDi
 
           {/* Product Details */}
           <div className="flex-1 min-w-0">
-            <h3 className="font-medium text-zinc-900 truncate mb-1">
+          <h3 className="font-medium text-zinc-900 dark:text-slate-100 truncate mb-1">
               {item.name}
             </h3>
             <p className="text-lg font-semibold bg-gradient-to-r from-red-600 to-pink-600 bg-clip-text text-transparent">
@@ -48,7 +48,7 @@ export function CartItemDisplay({ item, onUpdateQuantity, onRemove }: CartItemDi
         </div>
 
         {/* Subtotal Row */}
-        <div className="flex items-center justify-between mt-3 pt-3 border-t border-zinc-100">
+        <div className="flex items-center justify-between mt-3 pt-3 border-t border-zinc-100 dark:border-slate-600">
           <span className="text-sm text-zinc-600">
             小計 ({item.quantity}個)
           </span>

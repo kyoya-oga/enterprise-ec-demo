@@ -13,9 +13,9 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   const { locale } = useParams() as { locale: string }
   return (
-    <Card className="bg-zinc-900/80 backdrop-blur-sm border-zinc-800 hover:shadow-xl hover:border-zinc-700 transition-all duration-300 group overflow-hidden">
+    <Card className="bg-slate-700/70 backdrop-blur-sm border-slate-600 hover:shadow-xl hover:border-slate-500 transition-all duration-300 group overflow-hidden">
       <Link href={`/${locale}/products/${product.id}`} className="block">
-        <div className="aspect-square bg-zinc-800 flex items-center justify-center overflow-hidden relative">
+        <div className="aspect-square bg-slate-600 flex items-center justify-center overflow-hidden relative">
           {product.image ? (
             <Image
               src={product.image}
@@ -27,7 +27,7 @@ export function ProductCard({ product }: ProductCardProps) {
             />
           ) : (
             <div className="text-zinc-500 text-center">
-              <div className="w-16 h-16 mx-auto bg-zinc-700 rounded mb-2"></div>
+              <div className="w-16 h-16 mx-auto bg-slate-600 rounded mb-2"></div>
               <span className="text-sm">画像なし</span>
             </div>
           )}
@@ -45,13 +45,13 @@ export function ProductCard({ product }: ProductCardProps) {
         )}
 
         <Link href={`/${locale}/products/${product.id}`}>
-          <h3 className="font-semibold text-lg text-zinc-100 line-clamp-2 hover:text-white transition-colors leading-relaxed cursor-pointer">
+          <h3 className="font-semibold text-lg text-slate-100 line-clamp-2 hover:text-white transition-colors leading-relaxed cursor-pointer">
             {product.name}
           </h3>
         </Link>
 
         {product.description && (
-          <p className="text-zinc-400 text-sm line-clamp-2 leading-relaxed">
+          <p className="text-slate-300 text-sm line-clamp-2 leading-relaxed">
             {product.description}
           </p>
         )}
@@ -64,9 +64,9 @@ export function ProductCard({ product }: ProductCardProps) {
           {product.rating && (
             <div className="flex items-center gap-1">
               <span className="text-yellow-400">★</span>
-              <span className="text-zinc-300">{product.rating}</span>
+              <span className="text-slate-300">{product.rating}</span>
               {product.reviews && (
-                <span className="text-zinc-500">({product.reviews})</span>
+                <span className="text-slate-400">({product.reviews})</span>
               )}
             </div>
           )}
@@ -83,7 +83,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <Link href={`/${locale}/products/${product.id}`} className="block">
           <button
             disabled={product.stock === 0}
-            className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 disabled:from-zinc-700 disabled:to-zinc-700 disabled:text-zinc-500 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 disabled:cursor-not-allowed"
+            className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 disabled:from-slate-600 disabled:to-slate-600 disabled:text-slate-400 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 disabled:cursor-not-allowed"
           >
             {product.stock > 0 ? '詳細を見る' : '在庫切れ'}
           </button>

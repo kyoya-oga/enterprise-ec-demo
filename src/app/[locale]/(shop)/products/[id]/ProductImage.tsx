@@ -8,7 +8,7 @@ interface ProductImageProps {
 export function ProductImage({ product }: ProductImageProps) {
   return (
     <div className="space-y-4">
-      <div className="aspect-square bg-zinc-900/80 backdrop-blur-sm border border-zinc-800 rounded-lg overflow-hidden">
+      <div className="aspect-square bg-slate-700/80 backdrop-blur-sm border border-slate-600 rounded-lg overflow-hidden">
         <Image
           src={product.image || '/images/placeholder.jpg'}
           alt={product.name}
