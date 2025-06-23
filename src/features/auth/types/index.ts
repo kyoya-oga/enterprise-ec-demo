@@ -47,8 +47,6 @@ export interface AuthActions {
   readonly refreshUser: () => Promise<void>
 }
 
-// TODO: 将来実装予定の追加インターフェース
-/*
 export interface Session {
   readonly id: string
   readonly userId: string
@@ -77,4 +75,3 @@ export interface ServerAuthResult {
   readonly session: Session | null
   readonly error: AuthError | null
 }
-*/
