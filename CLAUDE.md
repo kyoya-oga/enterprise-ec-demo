@@ -19,6 +19,30 @@ npm run test               # Run type-check + unit tests with Vitest
 npm run test:coverage      # Run tests with coverage report (80% threshold)
 ```
 
+## Initial Setup
+
+### Authentication Data Setup
+1. Copy the example user data file:
+   ```bash
+   cp src/lib/data/users.json.example src/lib/data/users.json
+   ```
+
+2. Generate password hashes using the provided script:
+   ```bash
+   # Interactive password entry (recommended for security)
+   node scripts/generate-user-hash.js
+   
+   # Or with command line argument (less secure)
+   node scripts/generate-user-hash.js "your-password"
+   ```
+
+3. Replace `GENERATE_WITH_BCRYPT_HASH_HERE` with the generated hashes
+4. Update email addresses to your organization's domain
+
+**For Development/Testing**: The current `users.json` contains test accounts:
+- **User**: user@example.com / password
+- **Admin**: admin@example.com / password
+
 ## Architecture Overview
 
 This is a **Japanese-focused enterprise e-commerce application** built with Next.js 14 App Router, TypeScript, and Tailwind CSS. The architecture follows a **feature-based modular design** with **internationalization support**.

@@ -1,4 +1,10 @@
-export default function ProfilePage({ params: { locale } }: { params: { locale: string } }) {
+import { requireAuth } from '@/lib/auth/server'
+
+export default async function ProfilePage({ params: { locale } }: { params: { locale: string } }) {
+  // 🎯 HYBRID AUTH - Server Component Authentication
+  // Replaces middleware JWT verification with complete server-side validation
+  const user = await requireAuth(locale)
+  
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <h1 className="text-2xl font-bold mb-6">プロフィール</h1>
@@ -9,7 +15,7 @@ export default function ProfilePage({ params: { locale } }: { params: { locale: 
             <label className="block text-sm font-medium text-gray-700 mb-2">姓</label>
             <input 
               type="text" 
-              defaultValue="田中"
+              defaultValue={user.lastName}
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -17,7 +23,7 @@ export default function ProfilePage({ params: { locale } }: { params: { locale: 
             <label className="block text-sm font-medium text-gray-700 mb-2">名</label>
             <input 
               type="text" 
-              defaultValue="太郎"
+              defaultValue={user.firstName}
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -27,7 +33,7 @@ export default function ProfilePage({ params: { locale } }: { params: { locale: 
           <label className="block text-sm font-medium text-gray-700 mb-2">メールアドレス</label>
           <input 
             type="email" 
-            defaultValue="tanaka@example.com"
+            defaultValue={user.email}
             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>

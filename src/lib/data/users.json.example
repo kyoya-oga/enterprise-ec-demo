@@ -1,0 +1,22 @@
+[
+  {
+    "id": "1",
+    "email": "user@yourcompany.com",
+    "firstName": "テスト",
+    "lastName": "ユーザー",
+    "role": "user",
+    "passwordHash": "GENERATE_WITH_BCRYPT_HASH_HERE",
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "2", 
+    "email": "admin@yourcompany.com",
+    "firstName": "管理者",
+    "lastName": "アカウント",
+    "role": "admin",
+    "passwordHash": "GENERATE_WITH_BCRYPT_HASH_HERE",
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-01T00:00:00Z"
+  }
+]

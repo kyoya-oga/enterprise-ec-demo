@@ -1,18 +1,12 @@
-// TODO: サーバーコンポーネント認証対応実装予定
-// Phase 1: JWT/Cookie セッション管理追加
-// - ログイン成功時にJWTトークン生成
-// - HTTPOnly Cookie設定
-// - リフレッシュトークン機能
-// Phase 2: セキュリティ強化
-// - Rate Limiting (ログイン試行制限)
-// - CSRF トークン検証
-// - IP制限・ジオロケーション確認
+// 🎯 HYBRID AUTH - Login API Implementation
+// Complete authentication flow with JWT generation and cookie management
 
 import { NextRequest, NextResponse } from 'next/server'
 import { readFile } from 'fs/promises'
 import path from 'path'
 import bcrypt from 'bcrypt'
 import { validateLoginInput } from '@/lib/validation'
+import { createTokenPair } from '@/lib/auth/jwt'
 import type { ApiUser } from '@/features/auth/types'
 
 
@@ -55,16 +49,39 @@ export async function POST(req: NextRequest) {
 
     const { passwordHash: _, ...userResponse } = user
     
-    // TODO: JWT トークン生成とCookie設定
-    // const token = await generateJWT(userResponse)
-    // const response = NextResponse.json({ message: 'Login successful', user: userResponse })
-    // response.cookies.set('auth-token', token, { httpOnly: true, secure: true, sameSite: 'strict' })
-    // return response
-    
-    return NextResponse.json(Object.freeze({ 
-      message: 'Login successful',
-      user: Object.freeze(userResponse)
-    }), { status: 200 })
+    // 🎯 HYBRID AUTH - JWT Token Generation and Cookie Setup
+    try {
+      const tokens = await createTokenPair({
+        userId: userResponse.id,
+        email: userResponse.email,
+        role: userResponse.role
+      })
+      
+      const response = NextResponse.json(Object.freeze({ 
+        message: 'Login successful',
+        user: Object.freeze(userResponse)
+      }), { status: 200 })
+      
+      // Set HTTPOnly cookies for security
+      response.cookies.set('auth-token', tokens.token, { 
+        httpOnly: true, 
+        secure: process.env.NODE_ENV === 'production', 
+        sameSite: 'strict',
+        maxAge: 15 * 60 // 15 minutes
+      })
+      
+      response.cookies.set('refresh-token', tokens.refreshToken, { 
+        httpOnly: true, 
+        secure: process.env.NODE_ENV === 'production', 
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 // 7 days
+      })
+      
+      return response
+    } catch (tokenError) {
+      console.error('Token generation error:', tokenError)
+      return NextResponse.json({ message: 'Authentication service error' }, { status: 500 })
+    }
   } catch (error) {
     console.error('Login error:', error)
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 })

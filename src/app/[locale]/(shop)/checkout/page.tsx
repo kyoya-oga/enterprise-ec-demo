@@ -1,4 +1,8 @@
-export default function CheckoutPage({ params: { locale } }: { params: { locale: string } }) {
+import { requireAuth } from '@/lib/auth/server'
+
+export default async function CheckoutPage({ params: { locale } }: { params: { locale: string } }) {
+  // 🎯 HYBRID AUTH - User Authentication Required for Checkout
+  const user = await requireAuth(locale)
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">決済</h1>

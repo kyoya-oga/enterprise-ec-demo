@@ -1,7 +1,18 @@
-export default function AdminDashboard({ params: { locale } }: { params: { locale: string } }) {
+import { requireRole } from '@/lib/auth/server'
+
+export default async function AdminDashboard({ params: { locale } }: { params: { locale: string } }) {
+  // 🎯 HYBRID AUTH - Admin Role Authentication
+  // Complete server-side role validation with DB access
+  const admin = await requireRole('admin', locale)
+  
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-8">管理ダッシュボード</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">管理ダッシュボード</h1>
+        <div className="text-sm text-gray-600">
+          ようこそ、{admin.lastName} {admin.firstName}さん
+        </div>
+      </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div className="bg-white rounded-lg shadow-md p-6">
