@@ -16,10 +16,6 @@
             "message": "Use 'const' instead of 'let'. Prefer immutable variables. If you need reassignment, consider refactoring to avoid mutation."
           },
           {
-            "selector": "CallExpression[callee.property.name='push']",
-            "message": "⚠️  Future: Use spread operator [...array, newItem] instead of push() for immutability."
-          },
-          {
             "selector": "CallExpression[callee.property.name='pop']",
             "message": "⚠️  Future: Use array.slice(0, -1) instead of pop() for immutability."
           },
@@ -60,4 +56,3 @@
     }
   ]
 }
-

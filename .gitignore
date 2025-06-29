@@ -56,3 +56,4 @@ Thumbs.db
 
 # User data (contains sensitive information)
 src/lib/data/users.json
+diff.txt
