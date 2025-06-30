@@ -166,9 +166,9 @@ export function generateCSRFToken(): string {
     );
   }
 
-  if (typeof require !== 'undefined') {
+  if (typeof (global as any).require !== 'undefined') {
     try {
-      const crypto = require('crypto');
+      const crypto = (global as any).require('crypto');
       return crypto.randomBytes(32).toString('hex');
     } catch (error) {}
   }
