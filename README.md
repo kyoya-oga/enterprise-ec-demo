@@ -506,6 +506,7 @@ docs/
 NEXT_PUBLIC_SITE_URL=https://your-domain.com
 NEXT_PUBLIC_API_URL=https://api.your-domain.com
 ```
+詳しいSupabaseプロジェクトの作成手順と環境変数の設定方法は[SUPABASE_SETUP.md](./SUPABASE_SETUP.md)を参照してください。
 
 ## 🧪 テスト
 
