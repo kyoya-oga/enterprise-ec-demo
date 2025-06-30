@@ -61,7 +61,7 @@ describe('LoadingSpinner', () => {
     it('テキストが提供されない場合、テキストが表示されない', () => {
       render(<LoadingSpinner />)
       
-      const container = screen.getByRole('generic')
+      const container = screen.getAllByRole('generic')[1]
       expect(container.children).toHaveLength(1) // スピナーのみ
     })
 
@@ -81,7 +81,7 @@ describe('LoadingSpinner', () => {
     it('スピナーとテキストが正しい順序で表示される', () => {
       render(<LoadingSpinner text="読み込み中" />)
       
-      const container = screen.getByRole('generic')
+      const container = screen.getAllByRole('generic')[1]
       const children = Array.from(container.children)
       
       expect(children).toHaveLength(2)
@@ -95,7 +95,7 @@ describe('LoadingSpinner', () => {
     it('基本的なレイアウトクラスが適用される', () => {
       render(<LoadingSpinner />)
       
-      const container = screen.getByRole('generic')
+      const container = screen.getAllByRole('generic')[1]
       expect(container).toHaveClass(
         'flex',
         'items-center',
@@ -108,7 +108,7 @@ describe('LoadingSpinner', () => {
     it('テキストありの場合もレイアウトが維持される', () => {
       render(<LoadingSpinner text="テスト" />)
       
-      const container = screen.getByRole('generic')
+      const container = screen.getAllByRole('generic')[1]
       expect(container).toHaveClass(
         'flex',
         'items-center',
@@ -124,7 +124,7 @@ describe('LoadingSpinner', () => {
       render(<LoadingSpinner />)
       
       // Loader2コンポーネントが正しく描画されることを確認
-      const spinner = screen.getByRole('generic').querySelector('svg')
+      const spinner = screen.getAllByRole('generic')[1].querySelector('svg')
       expect(spinner).toBeInTheDocument()
     })
 
@@ -141,7 +141,7 @@ describe('LoadingSpinner', () => {
     it('スモールサイズとテキストの組み合わせ', () => {
       render(<LoadingSpinner size="sm" text="処理中" />)
       
-      const spinner = screen.getByRole('generic').querySelector('svg')
+      const spinner = screen.getAllByRole('generic')[1].querySelector('svg')
       const text = screen.getByText('処理中')
       
       expect(spinner).toHaveClass('w-4', 'h-4')
@@ -151,7 +151,7 @@ describe('LoadingSpinner', () => {
     it('ラージサイズとテキストの組み合わせ', () => {
       render(<LoadingSpinner size="lg" text="大きな処理実行中" />)
       
-      const spinner = screen.getByRole('generic').querySelector('svg')
+      const spinner = screen.getAllByRole('generic')[1].querySelector('svg')
       const text = screen.getByText('大きな処理実行中')
       
       expect(spinner).toHaveClass('w-8', 'h-8')
@@ -162,10 +162,12 @@ describe('LoadingSpinner', () => {
   describe('エッジケース', () => {
     it('空のテキストでも正常に動作する', () => {
       render(<LoadingSpinner text="" />)
-      
-      const container = screen.getByRole('generic')
+
+      const container = screen.getAllByRole('generic')[1]
       expect(container.children).toHaveLength(2) // スピナー + 空のspan
-      expect(screen.getByText('')).toBeInTheDocument()
+      const span = container.querySelector('span')
+      expect(span).toBeInTheDocument()
+      expect(span?.textContent).toBe('')
     })
 
     it('長いテキストでも正常に表示される', () => {

@@ -228,14 +228,17 @@ describe('Cookie 管理', () => {
 
     it('crypto.getRandomValuesが利用可能な場合は使用する', () => {
       const originalCrypto = global.crypto
-      global.crypto = {
-        getRandomValues: vi.fn((array) => {
-          for (let i = 0; i < array.length; i++) {
-            array[i] = Math.floor(Math.random() * 256)
-          }
-          return array
-        }),
-      } as any
+      Object.defineProperty(global, 'crypto', {
+        value: {
+          getRandomValues: vi.fn((array) => {
+            for (let i = 0; i < array.length; i++) {
+              array[i] = Math.floor(Math.random() * 256)
+            }
+            return array
+          }),
+        },
+        configurable: true
+      })
       
       const token = generateCSRFToken()
       
@@ -243,23 +246,23 @@ describe('Cookie 管理', () => {
       expect(token).toBeDefined()
       expect(token.length).toBe(64) // 32 bytes * 2 hex chars
       
-      global.crypto = originalCrypto
+      Object.defineProperty(global, 'crypto', { value: originalCrypto, configurable: true })
     })
 
     it('cryptoが利用不可の場合はMath.randomにフォールバックする', () => {
       const originalCrypto = global.crypto
-      const originalRequire = global.require
-      
-      global.crypto = undefined as any
-      global.require = undefined as any
+      const originalRequire = (global as any).require
+
+      Object.defineProperty(global, 'crypto', { value: undefined, configurable: true })
+      Object.defineProperty(global, 'require', { value: undefined, configurable: true })
       
       const token = generateCSRFToken()
       
       expect(token).toBeDefined()
       expect(token).toContain('-') // Should use fallback format
       
-      global.crypto = originalCrypto
-      global.require = originalRequire
+      Object.defineProperty(global, 'crypto', { value: originalCrypto, configurable: true })
+      Object.defineProperty(global, 'require', { value: originalRequire, configurable: true })
     })
   })
 

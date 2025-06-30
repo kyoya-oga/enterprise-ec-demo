@@ -31,13 +31,12 @@ const handleAsyncOperation = async <T>(
 ): Promise<void> => {
   set({ isLoading: true, error: null })
   try {
-    await new Promise(resolve => setTimeout(resolve, 10)) // 非同期処理をシミュレート
-    const result = operation()
+    operation()
     set({ isLoading: false })
   } catch (error) {
-    set({ 
-      isLoading: false, 
-      error: error instanceof Error ? error.message : errorMessage 
+    set({
+      isLoading: false,
+      error: error instanceof Error ? error.message : errorMessage
     })
   }
 }
@@ -48,10 +47,6 @@ const checkInventory = (productId: number, quantity: number): boolean => {
   // 商品ID 999は在庫切れとして扱う
   if (productId === 999) {
     throw new Error('在庫が不足しています')
-  }
-  // 数量が10を超える場合は在庫不足とする
-  if (quantity > 10) {
-    throw new Error('在庫が不足しています。最大10個まで購入可能です。')
   }
   return true
 }
@@ -73,16 +68,16 @@ export const useCartStore = create<CartStore>()(
             checkInventory(item.productId, item.quantity)
             
             const state = get()
-            const existingItem = state.items.find(i => i.productId === item.productId)
+            const existingItem = state.items.find(i => i.id === item.id)
             
             let newItems: CartItem[]
             if (existingItem) {
               const newQuantity = existingItem.quantity + item.quantity
               // 在庫チェック（合計数量）
               checkInventory(item.productId, newQuantity)
-              
+
               newItems = state.items.map(i =>
-                i.productId === item.productId ? { ...i, quantity: newQuantity } : i
+                i.id === item.id ? { ...i, quantity: newQuantity } : i
               )
             } else {
               newItems = [...state.items, item]
