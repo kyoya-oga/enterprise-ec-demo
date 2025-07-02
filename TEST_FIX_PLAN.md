@@ -19,3 +19,19 @@
    - 必要に応じて `createTokenPair` のモックを追加
 
 これらの修正により、残っているテスト失敗を解消する予定です。
+
+## 追加調査結果と次回方針
+
+上記対応を試みたものの、`jose` 利用箇所で `payload must be an instance of Uint8Array` という例外が発生し、JWT 生成に失敗することが判明しました。jsdom 環境では WebCrypto API の `subtle` 実装が存在せず、この影響で `jose` が正しく動作していない可能性があります。
+
+次回は以下を試行します。
+
+1. **テストセットアップで WebCrypto を polyfill**
+   - `tests/setup.ts` に `globalThis.crypto ||= require('crypto').webcrypto` を追加し、`subtle` を提供する。
+   - これで `jose` の内部実装が WebCrypto を利用できるか確認する。
+2. **環境変数の読み取りタイミングの見直し**
+   - モジュール読み込み時に `process.env` から値をキャッシュしているため、テスト中に環境変数を変更しても反映されない。テストで秘密鍵を変更する必要がある箇所は、関数実行時に `process.env` を参照するようリファクタリングする。
+3. **上記でも解決しない場合の代替案**
+   - `jsonwebtoken` など別の JWT ライブラリへの置き換えを検討する。
+
+まずは polyfill と環境変数読み取りの修正を優先し、テストが通るか確認する予定です。
