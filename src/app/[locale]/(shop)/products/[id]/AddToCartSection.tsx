@@ -24,7 +24,7 @@ export function AddToCartSection({ product, locale }: AddToCartSectionProps) {
 
   const handleAddToCart = async (product: Product) => {
     const item: CartItem = {
-      id: product.id, // productIdと同じ値を使用
+      id: Date.now() + Math.random(),
       productId: product.id,
       name: product.name,
       price: product.price,

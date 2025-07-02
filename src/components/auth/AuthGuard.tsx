@@ -6,17 +6,17 @@ interface AuthGuardProps {
   children: React.ReactNode
   requireRole?: 'user' | 'admin'
   locale?: string
-  fallback?: React.ReactNode
+  fallback?: React.ReactElement
 }
 
 // 🎯 HYBRID AUTH - Phase 2: Server Component Auth Guard
 // Provides comprehensive authentication with graceful error handling
-export async function AuthGuard({ 
-  children, 
-  requireRole, 
+export async function AuthGuard({
+  children,
+  requireRole,
   locale = 'ja',
-  fallback 
-}: AuthGuardProps) {
+  fallback
+}: AuthGuardProps): Promise<JSX.Element> {
   const authStatus = await getAuthStatus()
   
   // Handle unauthenticated users

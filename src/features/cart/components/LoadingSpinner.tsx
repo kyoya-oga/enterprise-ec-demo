@@ -16,7 +16,9 @@ export function LoadingSpinner({ size = 'md', text }: LoadingSpinnerProps) {
   return (
     <div className="flex items-center justify-center gap-2 p-2">
       <Loader2 className={`${sizeClasses[size]} animate-spin text-gray-600`} />
-      {text && <span className="text-sm text-gray-600">{text}</span>}
+      {text !== undefined && (
+        <span className="text-sm text-gray-600">{text}</span>
+      )}
     </div>
   )
 }

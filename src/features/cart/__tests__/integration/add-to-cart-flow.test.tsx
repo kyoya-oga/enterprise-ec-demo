@@ -1,5 +1,5 @@
 import React from 'react'
-import { describe, test, expect, beforeEach } from 'vitest'
+import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { AddToCartSection } from '@/app/[locale]/(shop)/products/[id]/AddToCartSection'
 import { CartSummary } from '@/features/cart/components/CartSummary'
@@ -36,6 +36,19 @@ vi.mock('@/components/ui', () => ({
   CardContent: ({ children, className, ...props }: any) => (
     <div className={className} {...props}>{children}</div>
   )
+}))
+
+// Mock Next.js router
+const mockPush = vi.fn()
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: mockPush,
+    back: vi.fn(),
+    forward: vi.fn(),
+    refresh: vi.fn(),
+    replace: vi.fn(),
+    prefetch: vi.fn(),
+  }),
 }))
 
 vi.mock('@/components/ui/Button', () => ({
