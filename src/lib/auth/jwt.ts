@@ -1,4 +1,4 @@
-import { SignJWT, jwtVerify } from 'jose'
+import jwt from 'jsonwebtoken'
 import { type JWTPayload, type AuthError } from '@/features/auth/types'
 
 // Throw error if secrets are not provided in production
@@ -11,10 +11,12 @@ if (process.env.NODE_ENV === 'production') {
   }
 }
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key-do-not-use-in-production'
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'dev-refresh-secret-key-do-not-use-in-production'
+const getJWTSecret = () =>
+  process.env.JWT_SECRET || 'dev-secret-key-do-not-use-in-production'
 
-const getSecretKey = (secret: string) => new TextEncoder().encode(secret)
+const getRefreshSecret = () =>
+  process.env.JWT_REFRESH_SECRET || 'dev-refresh-secret-key-do-not-use-in-production'
+
 
 const JWT_EXPIRY = '15m'
 const REFRESH_TOKEN_EXPIRY = '7d'
@@ -22,35 +24,37 @@ const ALGORITHM = 'HS256'
 
 export async function generateJWT(payload: Omit<JWTPayload, 'iat' | 'exp'>): Promise<string> {
   try {
-    const secretKey = getSecretKey(JWT_SECRET)
-    
-    const jwt = await new SignJWT(payload)
-      .setProtectedHeader({ alg: ALGORITHM })
-      .setIssuedAt()
-      .setExpirationTime(JWT_EXPIRY)
-      .setIssuer(process.env.JWT_ISSUER || 'enterprise-ec-demo')
-      .setAudience(process.env.JWT_AUDIENCE || 'enterprise-ec-demo')
-      .sign(secretKey)
-    
-    return jwt
+    const secret = getJWTSecret()
+    if (!secret) throw new Error('JWT secret not provided')
+
+    const token = jwt.sign(payload, secret, {
+      algorithm: ALGORITHM,
+      expiresIn: JWT_EXPIRY,
+      issuer: process.env.JWT_ISSUER || 'enterprise-ec-demo',
+      audience: process.env.JWT_AUDIENCE || 'enterprise-ec-demo',
+    })
+
+    return token
   } catch (error) {
     throw new Error('Failed to generate JWT token')
   }
 }
 
-export async function generateRefreshToken(payload: Omit<JWTPayload, 'iat' | 'exp'>): Promise<string> {
+export async function generateRefreshToken(
+  payload: Omit<JWTPayload, 'iat' | 'exp'>,
+): Promise<string> {
   try {
-    const secretKey = getSecretKey(JWT_REFRESH_SECRET)
-    
-    const jwt = await new SignJWT(payload)
-      .setProtectedHeader({ alg: ALGORITHM })
-      .setIssuedAt()
-      .setExpirationTime(REFRESH_TOKEN_EXPIRY)
-      .setIssuer(process.env.JWT_ISSUER || 'enterprise-ec-demo')
-      .setAudience(process.env.JWT_AUDIENCE || 'enterprise-ec-demo')
-      .sign(secretKey)
-    
-    return jwt
+    const secret = getRefreshSecret()
+    if (!secret) throw new Error('Refresh secret not provided')
+
+    const token = jwt.sign(payload, secret, {
+      algorithm: ALGORITHM,
+      expiresIn: REFRESH_TOKEN_EXPIRY,
+      issuer: process.env.JWT_ISSUER || 'enterprise-ec-demo',
+      audience: process.env.JWT_AUDIENCE || 'enterprise-ec-demo',
+    })
+
+    return token
   } catch (error) {
     throw new Error('Failed to generate refresh token')
   }
@@ -58,15 +62,13 @@ export async function generateRefreshToken(payload: Omit<JWTPayload, 'iat' | 'ex
 
 export async function verifyJWT(token: string): Promise<JWTPayload> {
   try {
-    const secretKey = getSecretKey(JWT_SECRET)
-    
-    const { payload } = await jwtVerify(token, secretKey, {
+    const payload = jwt.verify(token, getJWTSecret(), {
       algorithms: [ALGORITHM],
       issuer: process.env.JWT_ISSUER || 'enterprise-ec-demo',
       audience: process.env.JWT_AUDIENCE || 'enterprise-ec-demo',
-    })
-    
-    return payload as unknown as JWTPayload
+    }) as JWTPayload
+
+    return payload
   } catch (error) {
     const authError: AuthError = {
       code: 'TOKEN_EXPIRED',
@@ -79,15 +81,13 @@ export async function verifyJWT(token: string): Promise<JWTPayload> {
 
 export async function verifyRefreshToken(token: string): Promise<JWTPayload> {
   try {
-    const secretKey = getSecretKey(JWT_REFRESH_SECRET)
-    
-    const { payload } = await jwtVerify(token, secretKey, {
+    const payload = jwt.verify(token, getRefreshSecret(), {
       algorithms: [ALGORITHM],
       issuer: process.env.JWT_ISSUER || 'enterprise-ec-demo',
       audience: process.env.JWT_AUDIENCE || 'enterprise-ec-demo',
-    })
-    
-    return payload as unknown as JWTPayload
+    }) as JWTPayload
+
+    return payload
   } catch (error) {
     const authError: AuthError = {
       code: 'TOKEN_EXPIRED',
