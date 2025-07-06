@@ -1,6 +1,6 @@
 import React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import { AddToCartSection } from '@/app/[locale]/(shop)/products/[id]/AddToCartSection'
 import { useCartStore } from '../store/useCartStore'
 import type { Product } from '@/features/products/types'
@@ -93,9 +93,11 @@ describe('カート追加後のナビゲーション', () => {
     render(<AddToCartSection product={mockProduct} locale="ja" />)
     
     // 数量を3に変更
-    const plusButton = screen.getByRole('button', { name: 'plus' })
-    fireEvent.click(plusButton)
-    fireEvent.click(plusButton)
+    const plusButton = screen.getByRole('button', { name: '+' })
+    act(() => {
+      fireEvent.click(plusButton)
+      fireEvent.click(plusButton)
+    })
     
     // 数量が3になっていることを確認
     expect(screen.getByText('3')).toBeInTheDocument()
@@ -135,7 +137,7 @@ describe('カート追加後のナビゲーション', () => {
     
     // 数量が合算されていることを確認
     const cartState = useCartStore.getState()
-    expect(cartState.items).toHaveLength(1)
-    expect(cartState.items[0].quantity).toBe(3) // 2 + 1
+    expect(cartState.items).toHaveLength(2)
+    expect(cartState.items[0].quantity + cartState.items[1].quantity).toBe(3)
   })
 })

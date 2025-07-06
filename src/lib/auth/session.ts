@@ -1,7 +1,6 @@
 import { type User, type Session, type JWTPayload, type AuthError, type ServerAuthResult } from '@/features/auth/types'
 import { verifyJWT, createTokenPair, isTokenExpired } from './jwt'
 import { getAuthCookie, getRefreshCookie } from './cookies'
-import { v4 as uuidv4 } from 'uuid'
 
 const blacklistedSessions = new Set<string>()
 
@@ -10,7 +9,7 @@ export async function createSession(user: User): Promise<{
   tokens: { token: string; refreshToken: string }
 }> {
   try {
-    const sessionId = uuidv4()
+    const sessionId = crypto.randomUUID()
     const now = new Date().toISOString()
     
     const jwtPayload: Omit<JWTPayload, 'iat' | 'exp'> = {
@@ -78,7 +77,7 @@ export async function getSession(token?: string): Promise<ServerAuthResult> {
     }
     
     const session: Session = {
-      id: uuidv4(),
+      id: crypto.randomUUID(),
       userId: user.id,
       token: authToken,
       refreshToken: getRefreshCookie() || '',
@@ -208,10 +207,24 @@ export async function validateSession(token?: string): Promise<{
 }> {
   try {
     const result = await getSession(token)
+    if (result.error && !(result.error as AuthError).code) {
+      return {
+        isValid: false,
+        user: null,
+        error: {
+          code: 'UNAUTHORIZED',
+          message: 'Session validation failed',
+          details: {
+            error: result.error instanceof Error ? result.error.message : 'Unknown error',
+          },
+        },
+      }
+    }
+
     return {
       isValid: result.user !== null && result.error === null,
       user: result.user,
-      error: result.error,
+      error: result.error as AuthError | null,
     }
   } catch (error) {
     return {

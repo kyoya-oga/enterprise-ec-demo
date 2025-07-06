@@ -220,11 +220,11 @@ describe('JWT ユーティリティ', () => {
       expect(extracted).toBeNull()
     })
 
-    it('不正な形式のBearerヘッダーに対して空文字を返す', () => {
+    it('不正な形式のBearerヘッダーに対してnullを返す', () => {
       const authHeader = 'Bearer'
       const extracted = extractTokenFromHeader(authHeader)
-      
-      expect(extracted).toBe('')
+
+      expect(extracted).toBeNull()
     })
   })
 

@@ -246,7 +246,7 @@ describe('カートエッジケースと境界テスト', () => {
       expect(useCartStore.getState().items).toHaveLength(0)
     })
 
-    test('重複IDを別アイテムとして処理する', () => {
+    test('重複IDは数量を加算して1アイテムに統合される', () => {
       const { addItem } = useCartStore.getState()
       const item1: CartItem = {
         id: 1,
@@ -268,9 +268,10 @@ describe('カートエッジケースと境界テスト', () => {
       
       addItem(item1)
       addItem(item2)
-      
-      // Should have both items even with duplicate IDs
-      expect(useCartStore.getState().items).toHaveLength(2)
+
+      const state = useCartStore.getState()
+      expect(state.items).toHaveLength(1)
+      expect(state.items[0].quantity).toBe(2)
     })
   })
 

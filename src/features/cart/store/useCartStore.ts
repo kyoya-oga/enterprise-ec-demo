@@ -70,18 +70,16 @@ export const useCartStore = create<CartStore>()(
             const state = get()
             const existingItem = state.items.find(i => i.id === item.id)
             
-            let newItems: CartItem[]
-            if (existingItem) {
-              const newQuantity = existingItem.quantity + item.quantity
-              // 在庫チェック（合計数量）
-              checkInventory(item.productId, newQuantity)
-
-              newItems = state.items.map(i =>
-                i.id === item.id ? { ...i, quantity: newQuantity } : i
-              )
-            } else {
-              newItems = [...state.items, item]
-            }
+            const newItems: CartItem[] = existingItem
+              ? (() => {
+                  const newQuantity = existingItem.quantity + item.quantity
+                  // 在庫チェック（合計数量）
+                  checkInventory(item.productId, newQuantity)
+                  return state.items.map(i =>
+                    i.id === item.id ? { ...i, quantity: newQuantity } : i
+                  )
+                })()
+              : [...state.items, item]
             
             set({ items: newItems, ...calculateTotals(newItems) })
           },

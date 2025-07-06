@@ -46,6 +46,8 @@ const contexts = new Map<string, TestContext>()
 beforeEach(async () => {
   const context = await createTestContext()
   contexts.set(expect.getState().currentTestName || 'default', context)
+  process.env.JWT_SECRET = 'test-jwt-secret-key'
+  process.env.JWT_REFRESH_SECRET = 'test-refresh-secret-key'
 })
 
 const getTestContext = (): TestContext => {
@@ -60,6 +62,8 @@ afterEach(() => {
   const context = getTestContext()
   rmSync(context.tmpDir, { recursive: true, force: true })
   delete process.env.USERS_FILE
+  delete process.env.JWT_SECRET
+  delete process.env.JWT_REFRESH_SECRET
   contexts.delete(expect.getState().currentTestName || 'default')
 })
 

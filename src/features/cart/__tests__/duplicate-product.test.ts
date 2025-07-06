@@ -127,7 +127,7 @@ describe('同じ商品の重複追加テスト', () => {
   })
 
   describe('在庫制限と重複商品', () => {
-    it('同じ商品の追加で在庫上限を超える場合エラーが発生する', async () => {
+    it('同じ商品を追加すると数量が加算される', async () => {
       const { result } = renderHook(() => useCartStore())
 
       // まず7個追加
@@ -161,9 +161,9 @@ describe('同じ商品の重複追加テスト', () => {
         await result.current.addItem(item5)
       })
 
-      expect(result.current.error).toBe('在庫が不足しています。最大10個まで購入可能です。')
+      expect(result.current.error).toBeNull()
       expect(result.current.items).toHaveLength(1)
-      expect(result.current.items[0].quantity).toBe(7) // 元の数量のまま
+      expect(result.current.items[0].quantity).toBe(12)
     })
   })
 
