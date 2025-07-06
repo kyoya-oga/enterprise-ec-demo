@@ -23,13 +23,28 @@ async function readUsers(): Promise<readonly ApiUser[]> {
     const data = await readFile(dataFile, 'utf-8')
     const users = JSON.parse(data) as ApiUser[]
     return Object.freeze(users.map(user => Object.freeze(user)))
-  } catch {
-    return Object.freeze([])
+  } catch (error) {
+    if (error instanceof SyntaxError) { // Handle JSON parsing errors
+      throw new Error(`Failed to parse user data: ${error.message}`)
+    }
+    if (isNodeError(error) && error.code === 'ENOENT') { // Handle file not found
+      return Object.freeze([]) // Return empty array if file doesn't exist
+    }
+    // Re-throw other file system errors
+    throw new Error(`Failed to read user data: ${error instanceof Error ? error.message : String(error)}`)
   }
 }
 
+function isNodeError(error: unknown): error is NodeJS.ErrnoException {
+  return error instanceof Error && 'code' in error
+}
+
 async function writeUsers(users: readonly ApiUser[]): Promise<void> {
-  await writeFile(dataFile, JSON.stringify(users, null, 2))
+  try {
+    await writeFile(dataFile, JSON.stringify(users, null, 2))
+  } catch (error) {
+    throw new Error(`Failed to write user data: ${error instanceof Error ? error.message : String(error)}`)
+  }
 }
 
 export async function POST(req: NextRequest) {

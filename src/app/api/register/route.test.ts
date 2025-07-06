@@ -407,14 +407,9 @@ describe('POST /api/register', () => {
     })
 
     it('ファイルシステムエラーを処理する', async () => {
-      // Make the directory read-only to simulate file system error
-      const readOnlyDir = path.join(tmpDir, 'readonly')
-      require('fs').mkdirSync(readOnlyDir, { mode: 0o444 })
-      const readOnlyFile = path.join(readOnlyDir, 'users.json')
-      process.env.USERS_FILE = readOnlyFile
-      
-      vi.resetModules()
-      ;({ POST } = await import('./route'))
+      // Make the data file read-only to simulate a write error
+      writeFileSync(dataFile, '[]')
+      require('fs').chmodSync(dataFile, 0o444) // Read-only
 
       const req = createRequest({
         email: 'test@example.com',
@@ -422,12 +417,15 @@ describe('POST /api/register', () => {
         firstName: 'Test',
         lastName: 'User',
       })
-      
+
       const res = await POST(req)
-      expect(res.status).toBe(201)
+      expect(res.status).toBe(500)
       const body = await res.json()
-      expect(body.id).toBeDefined()
-      expect(consoleErrorSpy).not.toHaveBeenCalled()
+      expect(body.message).toBe('Internal server error')
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'Registration error:',
+        expect.any(Error)
+      )
     })
   })
 

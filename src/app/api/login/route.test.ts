@@ -141,4 +141,24 @@ describe('POST /api/login', () => {
     expect(body.message).toBe('Login successful')
     expect(body.user.email).toBe('test@example.com')
   })
+
+  it('ファイルシステムエラーを処理する', async () => {
+    const context = getTestContext()
+    // Intentionally delete the data file to trigger a file system error
+    rmSync(context.dataFile)
+
+    const req = createRequest({
+      email: 'test@example.com',
+      password: 'password123',
+    })
+
+    // Re-import the module to pick up the change in the file system
+    vi.resetModules()
+    const { POST } = await import('./route')
+
+    const res = await POST(req)
+    expect(res.status).toBe(500)
+    const body = await res.json()
+    expect(body.message).toBe('Internal server error')
+  })
 })

@@ -18,8 +18,9 @@ async function readUsers(): Promise<readonly ApiUser[]> {
     const data = await readFile(dataFile, 'utf-8')
     const users = JSON.parse(data) as ApiUser[]
     return Object.freeze(users.map(user => Object.freeze(user)))
-  } catch {
-    return Object.freeze([])
+  } catch (error) {
+    // Re-throw the error to be caught by the main error handler
+    throw new Error(`Failed to read or parse user data: ${error instanceof Error ? error.message : String(error)}`)
   }
 }
 
