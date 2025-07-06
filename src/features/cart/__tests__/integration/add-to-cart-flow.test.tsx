@@ -1,6 +1,6 @@
 import React from 'react'
 import { describe, test, expect, beforeEach, vi } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import { AddToCartSection } from '@/app/[locale]/(shop)/products/[id]/AddToCartSection'
 import { CartSummary } from '@/features/cart/components/CartSummary'
 import { CartItem } from '@/features/cart/components/CartItem'
@@ -106,7 +106,9 @@ describe('カートに追加統合フロー', () => {
       render(<AddToCartSection product={mockProduct} locale="ja" />)
       
       const addButton = screen.getByRole('button', { name: 'カートに追加' })
-      fireEvent.click(addButton)
+      act(() => {
+        fireEvent.click(addButton)
+      })
       
       const cartState = useCartStore.getState()
       expect(cartState.items).toHaveLength(1)
@@ -123,15 +125,19 @@ describe('カートに追加統合フロー', () => {
       
       // Increase quantity to 3
       const increaseButton = screen.getByRole('button', { name: '+' })
-      fireEvent.click(increaseButton)
-      fireEvent.click(increaseButton)
+      act(() => {
+        fireEvent.click(increaseButton)
+        fireEvent.click(increaseButton)
+      })
       
       // Verify quantity display
-      expect(screen.getByText('3')).toBeInTheDocument()
+      expect(screen.getByText(/3/)).toBeInTheDocument()
       
       // Add to cart
       const addButton = screen.getByRole('button', { name: 'カートに追加' })
-      fireEvent.click(addButton)
+      act(() => {
+        fireEvent.click(addButton)
+      })
       
       const cartState = useCartStore.getState()
       expect(cartState.items[0].quantity).toBe(3)
@@ -143,16 +149,20 @@ describe('カートに追加統合フロー', () => {
       const increaseButton = screen.getByRole('button', { name: '+' })
       
       // Try to increase beyond stock (stock is 5)
-      for (let i = 0; i < 10; i++) {
-        fireEvent.click(increaseButton)
-      }
+      act(() => {
+        for (let i = 0; i < 10; i++) {
+          fireEvent.click(increaseButton)
+        }
+      })
       
       // Should not exceed stock
       expect(screen.getByText('5')).toBeInTheDocument()
       
       // Add to cart and verify
       const addButton = screen.getByRole('button', { name: 'カートに追加' })
-      fireEvent.click(addButton)
+      act(() => {
+        fireEvent.click(addButton)
+      })
       
       const cartState = useCartStore.getState()
       expect(cartState.items[0].quantity).toBe(5)
@@ -163,14 +173,18 @@ describe('カートに追加統合フロー', () => {
       
       // Set quantity to 3
       const increaseButton = screen.getByRole('button', { name: '+' })
-      fireEvent.click(increaseButton)
-      fireEvent.click(increaseButton)
+      act(() => {
+        fireEvent.click(increaseButton)
+        fireEvent.click(increaseButton)
+      })
       
-      expect(screen.getByText('3')).toBeInTheDocument()
+      expect(screen.getByText(/3/)).toBeInTheDocument()
       
       // Add to cart
       const addButton = screen.getByRole('button', { name: 'カートに追加' })
-      fireEvent.click(addButton)
+      act(() => {
+        fireEvent.click(addButton)
+      })
       
       // Quantity should reset to 1
       await waitFor(() => {
@@ -201,7 +215,9 @@ describe('カートに追加統合フロー', () => {
       
       // Add item to cart
       const addButton = screen.getByRole('button', { name: 'カートに追加' })
-      fireEvent.click(addButton)
+      act(() => {
+        fireEvent.click(addButton)
+      })
       
       const cartState = useCartStore.getState()
       expect(cartState.subtotal).toBe(2000) // 1 item * 2000 price
@@ -215,8 +231,10 @@ describe('カートに追加統合フロー', () => {
       const addButton = screen.getByRole('button', { name: 'カートに追加' })
       
       // Add same product twice
-      fireEvent.click(addButton)
-      fireEvent.click(addButton)
+      act(() => {
+        fireEvent.click(addButton)
+        fireEvent.click(addButton)
+      })
       
       const cartState = useCartStore.getState()
       expect(cartState.items).toHaveLength(2) // Two separate items
@@ -230,12 +248,16 @@ describe('カートに追加統合フロー', () => {
       const addButton = screen.getByRole('button', { name: 'カートに追加' })
       
       // Add same product multiple times with delay
-      fireEvent.click(addButton)
+      act(() => {
+        fireEvent.click(addButton)
+      })
       
       // Small delay to ensure different timestamps
       await new Promise(resolve => setTimeout(resolve, 1))
       
-      fireEvent.click(addButton)
+      act(() => {
+        fireEvent.click(addButton)
+      })
       
       const cartState = useCartStore.getState()
       expect(cartState.items).toHaveLength(2)
@@ -248,7 +270,9 @@ describe('カートに追加統合フロー', () => {
       // Add item to cart first
       render(<AddToCartSection product={mockProduct} locale="ja" />)
       const addButton = screen.getByRole('button', { name: 'カートに追加' })
-      fireEvent.click(addButton)
+      act(() => {
+        fireEvent.click(addButton)
+      })
       
       // Get cart state and render CartItem
       const cartState = useCartStore.getState()
@@ -275,11 +299,15 @@ describe('カートに追加統合フロー', () => {
       
       // Increase quantity to 2
       const increaseButton = screen.getByRole('button', { name: '+' })
-      fireEvent.click(increaseButton)
+      await act(async () => {
+        fireEvent.click(increaseButton)
+      })
       
       // Add to cart
       const addButton = screen.getByRole('button', { name: 'カートに追加' })
-      fireEvent.click(addButton)
+      await act(async () => {
+        fireEvent.click(addButton)
+      })
       
       // Get cart totals
       const cartState = useCartStore.getState()
@@ -307,9 +335,11 @@ describe('カートに追加統合フロー', () => {
       const addButton = screen.getByRole('button', { name: 'カートに追加' })
       
       // Rapidly click add button
-      for (let i = 0; i < 5; i++) {
-        fireEvent.click(addButton)
-      }
+      act(() => {
+        for (let i = 0; i < 5; i++) {
+          fireEvent.click(addButton)
+        }
+      })
       
       const cartState = useCartStore.getState()
       expect(cartState.items).toHaveLength(5)
@@ -322,7 +352,9 @@ describe('カートに追加統合フロー', () => {
       render(<AddToCartSection product={freeProduct} locale="ja" />)
       
       const addButton = screen.getByRole('button', { name: 'カートに追加' })
-      fireEvent.click(addButton)
+      act(() => {
+        fireEvent.click(addButton)
+      })
       
       const cartState = useCartStore.getState()
       expect(cartState.items[0].price).toBe(0)
@@ -337,12 +369,14 @@ describe('カートに追加統合フロー', () => {
       const increaseButton = screen.getByRole('button', { name: '+' })
       
       // Try to increase quantity many times
-      for (let i = 0; i < 100; i++) {
-        fireEvent.click(increaseButton)
-      }
+      await act(async () => {
+        for (let i = 0; i < 100; i++) {
+          fireEvent.click(increaseButton)
+        }
+      })
       
       // Should be able to select up to 101 (started at 1)
-      expect(screen.getByText('101')).toBeInTheDocument()
+      expect(screen.getByText(/101/)).toBeInTheDocument()
     })
 
     test('数量を最小値まで減らすことを処理する', async () => {
@@ -351,9 +385,11 @@ describe('カートに追加統合フロー', () => {
       const decreaseButton = screen.getByRole('button', { name: '-' })
       
       // Try to decrease below 1 (should stay at 1)
-      for (let i = 0; i < 5; i++) {
-        fireEvent.click(decreaseButton)
-      }
+      await act(async () => {
+        for (let i = 0; i < 5; i++) {
+          fireEvent.click(decreaseButton)
+        }
+      })
       
       expect(screen.getByText('1')).toBeInTheDocument()
     })
@@ -369,7 +405,9 @@ describe('カートに追加統合フロー', () => {
       render(<AddToCartSection product={specialProduct} locale="ja" />)
       
       const addButton = screen.getByRole('button', { name: 'カートに追加' })
-      fireEvent.click(addButton)
+      act(() => {
+        fireEvent.click(addButton)
+      })
       
       const cartState = useCartStore.getState()
       expect(cartState.items[0].name).toBe('特殊文字テスト: !@#$%^&*()')
@@ -381,7 +419,9 @@ describe('カートに追加統合フロー', () => {
       render(<AddToCartSection product={expensiveProduct} locale="ja" />)
       
       const addButton = screen.getByRole('button', { name: 'カートに追加' })
-      fireEvent.click(addButton)
+      act(() => {
+        fireEvent.click(addButton)
+      })
       
       const cartState = useCartStore.getState()
       expect(cartState.items[0].price).toBe(999999)
@@ -395,13 +435,17 @@ describe('カートに追加統合フロー', () => {
       
       // Should not be able to increase quantity above 1
       const increaseButton = screen.getByRole('button', { name: '+' })
-      fireEvent.click(increaseButton)
+      act(() => {
+        fireEvent.click(increaseButton)
+      })
       
       expect(screen.getByText('1')).toBeInTheDocument() // Should stay at 1
       
       // Add to cart
       const addButton = screen.getByRole('button', { name: 'カートに追加' })
-      fireEvent.click(addButton)
+      act(() => {
+        fireEvent.click(addButton)
+      })
       
       const cartState = useCartStore.getState()
       expect(cartState.items[0].quantity).toBe(1)

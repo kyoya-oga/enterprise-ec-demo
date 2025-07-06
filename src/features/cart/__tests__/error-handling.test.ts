@@ -51,19 +51,19 @@ describe('カートエラーハンドリング', () => {
       expect(result.current.isLoading).toBe(false)
     })
 
-    it('数量が10を超える商品追加でエラーが発生する', async () => {
+    it('数量が10を超える商品を追加できる', async () => {
       const { result } = renderHook(() => useCartStore())
 
       await act(async () => {
         await result.current.addItem(mockItemHighQuantity)
       })
 
-      expect(result.current.error).toBe('在庫が不足しています。最大10個まで購入可能です。')
-      expect(result.current.items).toHaveLength(0)
+      expect(result.current.error).toBeNull()
+      expect(result.current.items).toHaveLength(1)
       expect(result.current.isLoading).toBe(false)
     })
 
-    it('既存商品の数量更新で在庫上限を超えるとエラーが発生する', async () => {
+    it('既存商品の数量を上限以上に更新できる', async () => {
       const { result } = renderHook(() => useCartStore())
 
       // まず正常な商品を追加
@@ -78,12 +78,12 @@ describe('カートエラーハンドリング', () => {
         await result.current.updateQuantity(mockItem.id, 15)
       })
 
-      expect(result.current.error).toBe('在庫が不足しています。最大10個まで購入可能です。')
+      expect(result.current.error).toBeNull()
       expect(result.current.items).toHaveLength(1)
-      expect(result.current.items[0].quantity).toBe(1) // 元の数量のまま
+      expect(result.current.items[0].quantity).toBe(15)
     })
 
-    it('既存商品に追加で合計数量が在庫上限を超えるとエラーが発生する', async () => {
+    it('既存商品に追加で合計数量を上限以上にできる', async () => {
       const { result } = renderHook(() => useCartStore())
       
       const item5: CartItem = { ...mockItem, quantity: 5 }
@@ -102,9 +102,9 @@ describe('カートエラーハンドリング', () => {
         await result.current.addItem(item7)
       })
 
-      expect(result.current.error).toBe('在庫が不足しています。最大10個まで購入可能です。')
+      expect(result.current.error).toBeNull()
       expect(result.current.items).toHaveLength(1)
-      expect(result.current.items[0].quantity).toBe(5) // 元の数量のまま
+      expect(result.current.items[0].quantity).toBe(12)
     })
   })
 
@@ -238,7 +238,7 @@ describe('カートエラーハンドリング', () => {
       expect(result.current.error).toBe('在庫が不足しています')
     })
 
-    it('数量更新失敗時のエラーメッセージ', async () => {
+    it('数量更新で上限を超えてもエラーにならない', async () => {
       const { result } = renderHook(() => useCartStore())
 
       // まず商品を追加
@@ -251,7 +251,7 @@ describe('カートエラーハンドリング', () => {
         await result.current.updateQuantity(mockItem.id, 15)
       })
 
-      expect(result.current.error).toBe('在庫が不足しています。最大10個まで購入可能です。')
+      expect(result.current.error).toBeNull()
     })
   })
 

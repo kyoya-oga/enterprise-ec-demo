@@ -55,7 +55,9 @@ export function AddToCartSection({ product, locale }: AddToCartSectionProps) {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setQuantity(Math.max(1, quantity - 1))}
+              onClick={() =>
+                setQuantity((q) => Math.max(1, q - 1))
+              }
               disabled={isLoading}
               className="px-3 py-1 border-zinc-700 text-zinc-300 hover:border-zinc-600 disabled:opacity-50"
             >
@@ -67,7 +69,9 @@ export function AddToCartSection({ product, locale }: AddToCartSectionProps) {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
+              onClick={() =>
+                setQuantity((q) => Math.min(product.stock, q + 1))
+              }
               disabled={isLoading}
               className="px-3 py-1 border-zinc-700 text-zinc-300 hover:border-zinc-600 disabled:opacity-50"
             >

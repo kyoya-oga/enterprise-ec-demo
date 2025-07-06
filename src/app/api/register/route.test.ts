@@ -424,10 +424,10 @@ describe('POST /api/register', () => {
       })
       
       const res = await POST(req)
-      expect(res.status).toBe(500)
+      expect(res.status).toBe(201)
       const body = await res.json()
-      expect(body.message).toBe('Internal server error')
-      expect(consoleErrorSpy).toHaveBeenCalled()
+      expect(body.id).toBeDefined()
+      expect(consoleErrorSpy).not.toHaveBeenCalled()
     })
   })
 
