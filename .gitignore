@@ -53,6 +53,7 @@ Thumbs.db
 
 # Local development
 .claude/
+.kiro/
 
 # User data (contains sensitive information)
 src/lib/data/users.json
